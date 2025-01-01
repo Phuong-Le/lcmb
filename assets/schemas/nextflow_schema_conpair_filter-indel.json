@@ -99,7 +99,6 @@
             "title": "Options specific to filter_snv subworkflow",
             "type": "object",
             "fa_icon": "fas fa-terminal",
-            "required": ["snv_vcfilter_config", "snv_rho_threshold"],
             "properties": {
                 "snv_vcfilter_config": {
                     "type": "string",
@@ -120,7 +119,7 @@
             "title": "Options specific to filter_indel subworkflow",
             "type": "object",
             "fa_icon": "fas fa-terminal",
-            "required": ["indel_vcfilter_config", "indel_rho_threshold"],
+            "required": ["indel_vcfilter_config", "indel_rho_threshold", "sigprofiler_genome"],
             "properties": {
                 "indel_vcfilter_config": {
                     "type": "string",
@@ -134,6 +133,10 @@
                     "type": "number",
                     "description": "rho threshold below which variant is filtered out",
                     "default": 0.1
+                },
+                "sigprofiler_genome": {
+                    "type": "string",
+                    "description": "genome to input to sigprofiler"
                 }
             }
         },
@@ -142,7 +145,7 @@
             "type": "object",
             "fa_icon": "fas fa-dna",
             "description": "Reference genome related files and options required for the workflow.",
-            "required": ["fasta", "fai"],
+            "required": ["fasta", "fai", "fasta_dict", "marker_bed", "marker_txt", "high_depth_regions", "high_depth_regions_tbi"],
             "properties": {
                 "genome": {
                     "type": "string",

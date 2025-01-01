@@ -76,7 +76,6 @@
             "title": "Options specific to conpair subworkflow",
             "type": "object",
             "fa_icon": "fas fa-terminal",
-            "required": ["concordance_threshold", "contamination_threshold_samples", "contamination_threshold_match"],
             "properties": {
                 "concordance_threshold": {
                     "type": "number",
@@ -142,7 +141,7 @@
             "type": "object",
             "fa_icon": "fas fa-dna",
             "description": "Reference genome related files and options required for the workflow.",
-            "required": ["fasta", "fai"],
+            "required": ["fasta", "fai", "high_depth_regions", "high_depth_regions_tbi"],
             "properties": {
                 "genome": {
                     "type": "string",

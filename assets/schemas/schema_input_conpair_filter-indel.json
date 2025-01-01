@@ -1,0 +1,82 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/sangersomatic/master/assets/schema_input.json",
+    "title": "nf-core/sangersomatic pipeline - params.input schema",
+    "description": "Schema for the file provided with params.input",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "sample_id": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Sample name must be provided and cannot contain spaces",
+                "description": "Sample ID, must be unique and cannot contain spaces",
+                "unique": true,
+                "meta": ["sample_id"]
+            },
+            "match_normal_id": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Match normal sample name must be provided and cannot contain spaces",
+                "description": "Match normal ID, cannot contain spaces",
+                "meta": ["match_normal_id"]
+            },
+            "pdid": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Donor ID (PDID) must be provided and cannot contain spaces",
+                "description": "Donor ID (PDID), cannot contain spaces",
+                "meta": ["pdid"]
+            },
+            "bam": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "description": "bam file for the <sample_id> sample"
+            },
+            "bai": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "description": "bam index (bam.bai) file for the <sample_id> sample"
+            },
+            "bas": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "description": "bam status (bam.bas) file for the <sample_id> sample"
+            },
+            "met": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "description": "met (samtools markedup) file (bam.met.gz) file for the <sample_id> sample"
+            },
+            "bam_match": {
+                "format": "file-path",
+                "exists": true,
+                "description": "bam file for the <match_normal_id> sample"
+            },
+            "bai_match": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "description": "bam index (bam.bai) file for the <sample_id> sample"
+            },
+            "indel_vcf": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "description": "indel VCF file for the <sample_id> sample"
+            },
+            "indel_vcf_tbi": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "description": "Index file for the indel VCF file sample <sample_id>"
+            }
+        },
+        "required": ["sample_id", "match_normal_id", "pdid", "bam", "bai", "bas", "met", "bam_match", "bai_match", "indel_vcf", "indel_vcf_tbi"]
+    }
+}
