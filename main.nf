@@ -53,7 +53,12 @@ workflow NFCORE_LCMB {
     run_filter_snv
     run_filter_indel
     run_phylogenetics
-    samplesheet // channel: samplesheet read in from --input
+    samplesheet_conpair // channel: samplesheet read in from --input
+    samplesheet_filter_snv
+    samplesheet_filter_indel
+    samplesheet_phylogenetics
+    samplesheet_snv_then_indel
+    samplesheet_topology
     input
     fasta
     fai
@@ -71,6 +76,9 @@ workflow NFCORE_LCMB {
     high_depth_regions_tbi
     hairpin_genome
     sigprofiler_genome
+    snv_then_indel
+    provided_topology
+    phylogenetics_outdir_basename
 
 
     main:
@@ -83,7 +91,12 @@ workflow NFCORE_LCMB {
         run_filter_snv,
         run_filter_indel,
         run_phylogenetics,
-        samplesheet,
+        samplesheet_conpair,
+        samplesheet_filter_snv,
+        samplesheet_filter_indel,
+        samplesheet_phylogenetics,
+        samplesheet_snv_then_indel,
+        samplesheet_topology,
         input,
         fasta,
         fai,
@@ -100,7 +113,10 @@ workflow NFCORE_LCMB {
         high_depth_regions,
         high_depth_regions_tbi,
         hairpin_genome,
-        sigprofiler_genome
+        sigprofiler_genome,
+        snv_then_indel,
+        provided_topology,
+        phylogenetics_outdir_basename
     )
 
 
@@ -128,7 +144,9 @@ workflow {
         params.run_conpair,
         params.run_filter_snv,
         params.run_filter_indel,
-        params.run_phylogenetics
+        params.run_phylogenetics,
+        params.snv_then_indel,
+        params.provided_topology
     )
 
     //
@@ -139,7 +157,12 @@ workflow {
         params.run_filter_snv,
         params.run_filter_indel,
         params.run_phylogenetics,
-        PIPELINE_INITIALISATION.out.samplesheet,
+        PIPELINE_INITIALISATION.out.samplesheet_conpair,
+        PIPELINE_INITIALISATION.out.samplesheet_filter_snv,
+        PIPELINE_INITIALISATION.out.samplesheet_filter_indel,
+        PIPELINE_INITIALISATION.out.samplesheet_phylogenetics,
+        PIPELINE_INITIALISATION.out.samplesheet_snv_then_indel,
+        PIPELINE_INITIALISATION.out.samplesheet_topology,
         params.input,
         params.fasta,
         params.fai,
@@ -156,7 +179,10 @@ workflow {
         params.high_depth_regions,
         params.high_depth_regions_tbi,
         params.hairpin_genome,
-        params.sigprofiler_genome
+        params.sigprofiler_genome,
+        params.snv_then_indel,
+        params.provided_topology,
+        params.phylogenetics_outdir_basename
     )
 
     //

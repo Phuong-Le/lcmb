@@ -419,6 +419,9 @@
             "$ref": "#/$definitions/filter_indel_options"
         },
         {
+            "$ref": "#/$definitions/phylogenetics_options"
+        },
+        {
             "$ref": "#/$definitions/reference_genome_options"
         },
         {

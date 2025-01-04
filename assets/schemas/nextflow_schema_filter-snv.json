@@ -16,6 +16,7 @@
                     "type": "string",
                     "format": "file-path",
                     "exists": true,
+                    "schema": "assets/schemas/schema_input_conpair_filter-snv.json",
                     "pattern": ["^\\S+\\.csv$", "^\\S+\\.tsv$"],
                     "description": "Path to comma-separated or tab-seperated file containing information about the samples in the experiment.",
                     "help_text": "See [usage docs](docs/usage.md).",
@@ -40,7 +41,6 @@
             "title": "Options specific to this pipeline",
             "type": "object",
             "fa_icon": "fas fa-terminal",
-            "required": ["run_conpair", "run_filter_snv", "run_filter_indel"],
             "properties": {
                 "run_conpair": {
                     "type": "boolean",
@@ -53,6 +53,11 @@
                     "default": true
                 },
                 "run_filter_indel": {
+                    "type": "boolean",
+                    "description": "whether to run filter_indel for filtering INDELs",
+                    "default": true
+                },
+                "run_filter_phylogenetics": {
                     "type": "boolean",
                     "description": "whether to run filter_indel for filtering INDELs",
                     "default": true
@@ -76,6 +81,7 @@
             "title": "Options specific to conpair subworkflow",
             "type": "object",
             "fa_icon": "fas fa-terminal",
+            "required": ["concordance_threshold", "contamination_threshold_samples", "contamination_threshold_match"],
             "properties": {
                 "concordance_threshold": {
                     "type": "number",
@@ -98,7 +104,7 @@
             "title": "Options specific to filter_snv subworkflow",
             "type": "object",
             "fa_icon": "fas fa-terminal",
-            "required": ["snv_vcfilter_config", "snv_rho_threshold"],
+            "required": ["snv_vcfilter_config", "snv_rho_threshold", "sigprofiler_genome"],
             "properties": {
                 "snv_vcfilter_config": {
                     "type": "string",
@@ -112,6 +118,10 @@
                     "type": "number",
                     "description": "rho threshold below which variant is filtered out",
                     "default": 0.1
+                },
+                "sigprofiler_genome": {
+                    "type": "string",
+                    "description": "genome to input to sigprofiler"
                 }
             }
         },
@@ -119,6 +129,7 @@
             "title": "Options specific to filter_indel subworkflow",
             "type": "object",
             "fa_icon": "fas fa-terminal",
+            "required": ["indel_vcfilter_config", "indel_rho_threshold", "sigprofiler_genome"],
             "properties": {
                 "indel_vcfilter_config": {
                     "type": "string",
@@ -132,6 +143,29 @@
                     "type": "number",
                     "description": "rho threshold below which variant is filtered out",
                     "default": 0.1
+                },
+                "sigprofiler_genome": {
+                    "type": "string",
+                    "description": "genome to input to sigprofiler"
+                }
+            }
+        },
+        "phylogenetics_options": {
+            "title": "Options specific to filter_indel subworkflow",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "properties": {
+                "snv_then_indel": {
+                    "type": "boolean",
+                    "description": "whether running phylogenetics for SNVs (phylogenetics) followed by phylogenetics for INDELS (phylogenetics_provided_topology)"
+                },
+                "provided_topology": {
+                    "type": "boolean",
+                    "description": "when only one phylogenetics pipeline is run, whether it is provided a topology"
+                },
+                "phylogenetics_outdir_basename": {
+                    "type": "string",
+                    "description": "directory name to publish results when only one phylogenetics pipeline is run"
                 }
             }
         },
@@ -386,13 +420,7 @@
             "$ref": "#/$definitions/pipeline_options"
         },
         {
-            "$ref": "#/$definitions/conpair_options"
-        },
-        {
             "$ref": "#/$definitions/filter_snv_options"
-        },
-        {
-            "$ref": "#/$definitions/filter_indel_options"
         },
         {
             "$ref": "#/$definitions/reference_genome_options"

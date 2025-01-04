@@ -36,6 +36,8 @@ workflow PIPELINE_INITIALISATION {
     run_filter_snv
     run_filter_indel
     run_phylogenetics
+    snv_then_indel
+    provided_topology
 
     main:
 
@@ -63,148 +65,201 @@ workflow PIPELINE_INITIALISATION {
     //
     validateInputParameters()
 
+
     // Checking parameters
+    // defining place holders
+    ch_samplesheet_conpair = null
+    ch_samplesheet_filter_snv = null
+    ch_samplesheet_filter_indel = null
+    ch_samplesheet_phylogenetics = null
+    ch_samplesheet_snv_then_indel = null
+    ch_samplesheet_topology = null
+
     if ( run_conpair == true ) {
         if ( run_filter_snv == true ) {
             if ( run_filter_indel == true ) {
-                // SAME INPUT AS FULL PIPELINE
-                UTILS_NFSCHEMA_PLUGIN (
+                if ( run_phylogenetics == true ) {
+                    UTILS_NFSCHEMA_PLUGIN (
                     workflow,
                     validate_params,
-                    "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv_filter-indel.json"
-                )
+                    "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv_filter-indel_phylogenetics.json"
+                    )
+                }
+                else {
+                    UTILS_NFSCHEMA_PLUGIN (
+                        workflow,
+                        validate_params,
+                        "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv_filter-indel.json"
+                    )
+                }
             }
             else {
-                UTILS_NFSCHEMA_PLUGIN (
+                if ( run_phylogenetics == true ) {
+                    UTILS_NFSCHEMA_PLUGIN (
+                    workflow,
+                    validate_params,
+                    "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv_phylogenetics.json"
+                    )
+                }
+                else {
+                    UTILS_NFSCHEMA_PLUGIN (
                     workflow,
                     validate_params,
                     "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv.json"
-                )
+                    )
+                }
             }
         }
         else if ( run_filter_indel == true ) {
-            if ( run_phylogenetics == true) {
+            if ( run_phylogenetics == true ) {
                 UTILS_NFSCHEMA_PLUGIN (
-                    workflow,
-                    validate_params,
-                    "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-indel.json"
+                workflow,
+                validate_params,
+                "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-indel_phylogenetics.json"
                 )
             }
             else {
                 UTILS_NFSCHEMA_PLUGIN (
-                    workflow,
-                    validate_params,
-                    "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-indel.json"
+                workflow,
+                validate_params,
+                "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-indel.json"
                 )
             }
         }
-    else {
-        //  Can't run conpair then phylogenetics without filtering - these should be run separately
-        assert params.run_phylogenetics == false
-        // CONPAIR ONLY
-        UTILS_NFSCHEMA_PLUGIN (
-                workflow,
-                validate_params,
-                "${projectDir}/assets/schemas/nextflow_schema_conpair.json"
-            )
-    }
+        else {
+            //  Can't run conpair then phylogenetics without filtering - these should be run separately
+            assert run_phylogenetics == false
+            // CONPAIR ONLY
+            UTILS_NFSCHEMA_PLUGIN (
+                    workflow,
+                    validate_params,
+                    "${projectDir}/assets/schemas/nextflow_schema_conpair.json"
+                )
+        }
+        // get samplesheet
+        Channel
+            .fromList(samplesheetToList(
+                input,
+                "${projectDir}/assets/schemas/schema_input_conpair.json"))
+            .set { ch_samplesheet_conpair }
     }
     else if ( run_filter_snv == true ) {
         if ( run_filter_indel == true ) {
-            // SAME AS FULL PIPELINE WHETHER run_phylogenetics is true or not
-            UTILS_NFSCHEMA_PLUGIN (
+            if ( run_phylogenetics == true ) {
+                UTILS_NFSCHEMA_PLUGIN (
+                workflow,
+                validate_params,
+                "${projectDir}/assets/schemas/nextflow_schema_filter-snv_filter-indel_phylogenetics.json"
+                )
+            }
+            else {
+                UTILS_NFSCHEMA_PLUGIN (
                 workflow,
                 validate_params,
                 "${projectDir}/assets/schemas/nextflow_schema_filter-snv_filter-indel.json"
             )
+            }
         }
         else {
-            SAME AS SNV ONLY WHETHER run_phylogenetics is true or not
-            UTILS_NFSCHEMA_PLUGIN (
+            if ( run_phylogenetics == true ) {
+                UTILS_NFSCHEMA_PLUGIN (
+                workflow,
+                validate_params,
+                "${projectDir}/assets/schemas/nextflow_schema_filter-snv_phylogenetics.json"
+                )
+            }
+            else {
+                UTILS_NFSCHEMA_PLUGIN (
                 workflow,
                 validate_params,
                 "${projectDir}/assets/schemas/nextflow_schema_filter-snv.json"
             )
+            }
+        }
+        // get samplesheet
+        Channel
+        .fromList(samplesheetToList(
+            input,
+            "${projectDir}/assets/schemas/schema_input_conpair_filter-snv.json"))
+        .set { ch_samplesheet_filter_snv }
+        if ( run_filter_indel == true ) {
+            Channel
+            .fromList(samplesheetToList(
+                input,
+                "${projectDir}/assets/schemas/schema_input_conpair_filter-indel.json"))
+            .set { ch_samplesheet_filter_indel }
         }
     }
     else if ( run_filter_indel == true ) {
-        if ( run_phylogenetics == true) {
-            // INDEL + phylogenetics
-            //  same input requirements as just indels
+        if ( run_phylogenetics == true ) {
             UTILS_NFSCHEMA_PLUGIN (
-                    workflow,
-                    validate_params,
-                    "${projectDir}/assets/schemas/nextflow_schema_filter-indel.json"
-                )
+                workflow,
+                validate_params,
+                "${projectDir}/assets/schemas/nextflow_schema_filter-indel_phylogenetics.json"
+            )
         }
         else {
-            // INDEL ONLY
             UTILS_NFSCHEMA_PLUGIN (
-                    workflow,
-                    validate_params,
-                    "${projectDir}/assets/schemas/nextflow_schema_filter-indel.json"
-                )
+                workflow,
+                validate_params,
+                "${projectDir}/assets/schemas/nextflow_schema_filter-indel.json"
+            )
         }
-    }
-    // else {
-    //     // PHYLOGENETICS ONLY
-    //     UTILS_NFSCHEMA_PLUGIN (
-    //         workflow,
-    //         validate_params,
-    //         "${projectDir}/nextflow_schema_phylogenetics.json"
-    //     )
-    // }
 
-
-    // get ch_samplesheet
-    if ( params.run_conpair == true ) {
+        // get samplesheet plus topology if applicable
         Channel
             .fromList(samplesheetToList(
-                params.input,
-                "${projectDir}/assets/schemas/schema_input_conpair.json"))
-            .set { ch_samplesheet }
-    }
-    else if ( params.run_filter_snv == true ) {
-        if ( params.run_filter_indel == true ) {
-            Channel
-            .fromList(samplesheetToList(
-                params.input,
-                "${projectDir}/assets/schemas/schema_input_conpair_filter-snv_filter-indel.json"))
-            .set { ch_samplesheet }
-        }
-        else {
-            Channel
-            .fromList(samplesheetToList(
-                params.input,
-                "${projectDir}/assets/schemas/schema_input_conpair_filter-snv.json"))
-            .set { ch_samplesheet }
-        }
-    }
-    else if ( params.run_filter_indel == true ) {
-        Channel
-            .fromList(samplesheetToList(
-                params.input,
+                input,
                 "${projectDir}/assets/schemas/schema_input_conpair_filter-indel.json"))
-            .set { ch_samplesheet }
+            .set { ch_samplesheet_filter_indel }
+        if ( run_phylogenetics == true ) {
+            Channel
+            .fromList(samplesheetToList(
+                input,
+                "${projectDir}/assets/schemas/schema_input_topology.json"))
+            .set { ch_samplesheet_topology }
+        }
+    }
+    else if ( run_phylogenetics == true ) {
+        // PHYLOGENETICS ONLY
+        UTILS_NFSCHEMA_PLUGIN (
+            workflow,
+            validate_params,
+            "${projectDir}/assets/schemas/nextflow_schema_phylogenetics.json"
+            )
+        // get samplesheet
+        if ( snv_then_indel == true ) {
+            Channel
+            .fromList(samplesheetToList(
+                input,
+                "${projectDir}/assets/schemas/schema_input_phylogenetics_snv-then-indel.json"))
+            .set { ch_samplesheet_snv_then_indel }
+        }
+        else {
+            Channel
+            .fromList(samplesheetToList(
+                input,
+                "${projectDir}/assets/schemas/schema_input_phylogenetics.json"))
+            .set { ch_samplesheet_phylogenetics }
+            if ( provided_topology == true ) {
+                Channel
+                .fromList(samplesheetToList(
+                    input,
+                    "${projectDir}/assets/schemas/schema_input_topology.json"))
+                .set { ch_samplesheet_topology }
+            }
+        }
+
     }
 
-    //
-    // // Validate parameters and generate parameter summary to stdout
-    // //
-    // UTILS_NFSCHEMA_PLUGIN (
-    //     workflow,
-    //     validate_params,
-    //     "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv.json"
-    // )
-    // //
-    // // Create channel from input file provided through params.input
-    // //
-    // Channel
-    //     .fromList(samplesheetToList(params.input, "${projectDir}/assets/schemas/schema_input_conpair_filter-snv.json"))
-    //     .set { ch_samplesheet }
 
     emit:
-    samplesheet = ch_samplesheet
+    samplesheet_conpair = ch_samplesheet_conpair
+    samplesheet_filter_snv = ch_samplesheet_filter_snv
+    samplesheet_filter_indel = ch_samplesheet_filter_indel
+    samplesheet_phylogenetics = ch_samplesheet_phylogenetics
+    samplesheet_snv_then_indel = ch_samplesheet_snv_then_indel
+    samplesheet_topology = ch_samplesheet_topology
     versions    = ch_versions
 }
 

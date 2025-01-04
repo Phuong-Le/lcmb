@@ -1,4 +1,6 @@
 process conpairPileup {
+    label 'process_low'
+
     publishDir "${params.outdir}/conpair_out/pileup", mode: params.publish_dir_mode
 
     input:

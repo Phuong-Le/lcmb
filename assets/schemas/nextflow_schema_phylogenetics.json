@@ -16,7 +16,6 @@
                     "type": "string",
                     "format": "file-path",
                     "exists": true,
-                    "schema": "assets/schemas/schema_input_conpair_filter-indel.json",
                     "pattern": ["^\\S+\\.csv$", "^\\S+\\.tsv$"],
                     "description": "Path to comma-separated or tab-seperated file containing information about the samples in the experiment.",
                     "help_text": "See [usage docs](docs/usage.md).",
@@ -118,6 +117,10 @@
                     "type": "number",
                     "description": "rho threshold below which variant is filtered out",
                     "default": 0.1
+                },
+                "sigprofiler_genome": {
+                    "type": "string",
+                    "description": "genome to input to sigprofiler"
                 }
             }
         },
@@ -416,7 +419,7 @@
             "$ref": "#/$definitions/pipeline_options"
         },
         {
-            "$ref": "#/$definitions/filter_indel_options"
+            "$ref": "#/$definitions/phylogenetics_options"
         },
         {
             "$ref": "#/$definitions/reference_genome_options"

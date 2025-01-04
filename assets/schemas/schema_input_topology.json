@@ -1,0 +1,25 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/sangersomatic/master/assets/schema_input.json",
+    "title": "nf-core/sangersomatic pipeline - params.input schema",
+    "description": "Schema for the file provided with params.input",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "pdid": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Donor ID (PDID) must be provided and cannot contain spaces",
+                "description": "Donor ID (PDID), cannot contain spaces",
+                "meta": ["pdid"]
+            },
+            "topology": {
+                "type": "string",
+                "format": "file-path",
+                "description": "path to tree topology file for donor <pdid>"
+            }
+        },
+        "required": ["pdid", "topology"]
+    }
+}

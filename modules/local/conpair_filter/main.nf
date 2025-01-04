@@ -1,4 +1,6 @@
 process conpairFilter {
+    label 'process_tiny'
+
     publishDir "${params.outdir}/conpair_out", mode: params.publish_dir_mode
 
     input:

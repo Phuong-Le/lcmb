@@ -1,5 +1,5 @@
 process conpairContamination {
-    publishDir "${params.outdir}/conpair_out", mode: params.publish_dir_mode
+    label 'process_tiny'
 
     input:
     tuple val(match_normal_id), path(match_pileup), val(sample_id), path(sample_pileup)

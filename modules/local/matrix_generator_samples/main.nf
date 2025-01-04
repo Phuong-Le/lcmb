@@ -1,4 +1,6 @@
 process matrixGeneratorSamples {
+    label 'process_tiny'
+
     publishDir "${params.outdir}/filter_${mut_type}_out", mode: params.publish_dir_mode
 
     input:
@@ -13,6 +15,7 @@ process matrixGeneratorSamples {
     mutmat_dir = "sample_mutmat/output"
     """
     SigProfilerMatrixGenerator matrix_generator sample_mutmat ${sigprofiler_genome} sample_mutmat
+    rm -rf ${mutmat_dir}/vcf_files
     """
 
 }

@@ -1,4 +1,6 @@
 process cgpVaf {
+    label 'process_single'
+
     publishDir "${params.outdir}/filter_${mut_type}_out/${pdid}", mode: params.publish_dir_mode
 
     input:

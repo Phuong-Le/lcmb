@@ -1,4 +1,7 @@
 process spectraPlottingSamples {
+    label 'process_tiny'
+    label 'spectra_plotting'
+
     publishDir "${params.outdir}/filter_${mut_type}_out", mode: params.publish_dir_mode
 
     input:
