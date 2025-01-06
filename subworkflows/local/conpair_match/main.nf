@@ -20,9 +20,9 @@ workflow CONPAIR_FILTER_WITH_MATCH_NORMAL {
     main:
 
     // check reference files specific to conpair exists
-    fasta_dict = file(fasta_dict, checkIfExists: true)
-    marker_txt = file(marker_txt, checkIfExists: true)
-    marker_bed = file(marker_bed, checkIfExists: true)
+    // fasta_dict = file(fasta_dict, checkIfExists: true)
+    // marker_txt = file(marker_txt, checkIfExists: true)
+    // marker_bed = file(marker_bed, checkIfExists: true)
 
     // pileup
     // sample

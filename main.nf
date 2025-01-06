@@ -15,7 +15,8 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { LCMB  } from './workflows/lcmb'
+include { LCMB_MATCH  } from './workflows/lcmb_match'
+include { LCMB_UNMATCH  } from './workflows/lcmb_unmatch'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_lcmb_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_lcmb_pipeline'
 include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_lcmb_pipeline'
@@ -49,6 +50,7 @@ params.high_depth_regions_tbi = getGenomeAttribute('high_depth_regions_tbi')
 workflow NFCORE_LCMB {
 
     take:
+    with_match_normal
     run_conpair
     run_filter_snv
     run_filter_indel
@@ -86,7 +88,8 @@ workflow NFCORE_LCMB {
     //
     // WORKFLOW: Run pipeline
     //
-    LCMB (
+    if ( with_match_normal == true ) {
+        LCMB_MATCH (
         run_conpair,
         run_filter_snv,
         run_filter_indel,
@@ -117,7 +120,43 @@ workflow NFCORE_LCMB {
         snv_then_indel,
         provided_topology,
         phylogenetics_outdir_basename
-    )
+        )
+    }
+    else {
+        LCMB_UNMATCH (
+        run_conpair,
+        run_filter_snv,
+        run_filter_indel,
+        run_phylogenetics,
+        samplesheet_conpair,
+        samplesheet_filter_snv,
+        samplesheet_filter_indel,
+        samplesheet_phylogenetics,
+        samplesheet_snv_then_indel,
+        samplesheet_topology,
+        input,
+        fasta,
+        fai,
+        fasta_dict,
+        marker_bed,
+        marker_txt,
+        concordance_threshold,
+        contamination_threshold_samples,
+        contamination_threshold_match,
+        snv_vcfilter_config,
+        snv_rho_threshold,
+        indel_vcfilter_config,
+        indel_rho_threshold,
+        high_depth_regions,
+        high_depth_regions_tbi,
+        hairpin_genome,
+        sigprofiler_genome,
+        snv_then_indel,
+        provided_topology,
+        phylogenetics_outdir_basename
+        )
+    }
+
 
 
 }
@@ -153,6 +192,7 @@ workflow {
     // WORKFLOW: Run main workflow
     //
     NFCORE_LCMB (
+        params.with_match_normal,
         params.run_conpair,
         params.run_filter_snv,
         params.run_filter_indel,

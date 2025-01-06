@@ -1,13 +1,13 @@
 include { lcmbVcfilter } from "$projectDir/modules/local/lcmb_vcfilter"
 include { cgpVaf } from "$projectDir/modules/local/cgpvaf"
-include { betaBinomFilterIndex } from "$projectDir/modules/local/betabinom_filter_index"
+include { betaBinomFilterIndexUnmatch } from "$projectDir/modules/local/betabinom_filter_index_unmatch"
 include { betaBinomFilter } from "$projectDir/modules/local/betabinom_filter"
 include { matrixGeneratorSamples } from "$projectDir/modules/local/matrix_generator_samples"
 include { spectraPlottingSamples } from "$projectDir/modules/local/spectra_plotting_samples"
 
 
 
-workflow LCMB_FILTER_INDEL_MATCH {
+workflow LCMB_FILTER_INDEL_UNMATCH {
     take:
     input
     vcfilter_config
@@ -86,7 +86,7 @@ workflow LCMB_FILTER_INDEL_MATCH {
     )
 
     // BetaBinomial filtering for germline and LCM artefacts based on cgpVaf (methods by Tim Coorens)
-    betaBinomFilterIndex(
+    betaBinomFilterIndexUnmatch(
         cgpVaf.out,
         mut_type,
         rho_threshold
@@ -100,7 +100,7 @@ workflow LCMB_FILTER_INDEL_MATCH {
             tuple(meta.pdid, meta.sample_id, meta.match_normal_id, vcf_filtered_gz, vcf_filtered_tbi)
         }
         .combine(
-            betaBinomFilterIndex.out.betabinom_bed,
+            betaBinomFilterIndexUnmatch.out.betabinom_bed,
             by: 0
         ),
         mut_type
@@ -120,7 +120,7 @@ workflow LCMB_FILTER_INDEL_MATCH {
         )
 
     emit:
-    betaBinomFilterIndex.out.phylogenetics_input
+    betaBinomFilterIndexUnmatch.out.phylogenetics_input
 
 
 }

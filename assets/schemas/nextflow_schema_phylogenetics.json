@@ -41,6 +41,11 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "properties": {
+                "with_match_normal": {
+                    "type": "boolean",
+                    "description": "whether samples are provided with a non-synthetic match normal",
+                    "default": true
+                },
                 "run_conpair": {
                     "type": "boolean",
                     "description": "whether to run conpair for contamination checking",

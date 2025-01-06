@@ -5,9 +5,9 @@
 */
 include { samplesheetToList         } from 'plugin/nf-schema'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
-include { CONPAIR_FILTER_WITH_MATCH_NORMAL } from "${projectDir}/subworkflows/local/conpair_match"
-include { LCMB_FILTER_SNV_MATCH } from "${projectDir}/subworkflows/local/lcmb_filter-snv_match"
-include { LCMB_FILTER_INDEL_MATCH } from "${projectDir}/subworkflows/local/lcmb_filter-indel_match"
+include { CONPAIR_FILTER_WITHOUT_MATCH_NORMAL } from "${projectDir}/subworkflows/local/conpair_unmatch"
+include { LCMB_FILTER_SNV_UNMATCH } from "${projectDir}/subworkflows/local/lcmb_filter-snv_unmatch"
+include { LCMB_FILTER_INDEL_UNMATCH } from "${projectDir}/subworkflows/local/lcmb_filter-indel_unmatch"
 include { PHYLOGENETICS } from "${projectDir}/subworkflows/local/phylogenetics"
 include { PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY } from "${projectDir}/subworkflows/local/phylogenetics_provided_topology"
 
@@ -17,7 +17,7 @@ include { PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY } from "${projectDir}/subworkflow
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-workflow LCMB {
+workflow LCMB_UNMATCH {
 
     take:
     run_conpair
@@ -55,7 +55,7 @@ workflow LCMB {
 
     // CONPAIR
     if ( run_conpair == true ) {
-        CONPAIR_FILTER_WITH_MATCH_NORMAL(
+        CONPAIR_FILTER_WITHOUT_MATCH_NORMAL(
             ch_samplesheet_conpair,
             input,
             fasta,
@@ -72,23 +72,8 @@ workflow LCMB {
     // FILTER SNV
     if ( run_filter_snv == true ) {
         if ( run_conpair == true ) {
-            // LCMB_FILTER_SNV_MATCH(
-            //     CONPAIR_FILTER_WITH_MATCH_NORMAL.out
-            //     .flatMap {
-            //     samplesheetToList( it, "${projectDir}/assets/schemas/schema_input_conpair_filter-snv.json" )
-            //     },
-            //     snv_vcfilter_config,
-            //     snv_rho_threshold,
-            //     hairpin_genome,
-            //     fasta,
-            //     fai,
-            //     high_depth_regions,
-            //     high_depth_regions_tbi,
-            //     sigprofiler_genome
-            // )
-
             LCMB_FILTER_SNV_MATCH(
-                CONPAIR_FILTER_WITH_MATCH_NORMAL.out
+                CONPAIR_FILTER_WITHOUT_MATCH_NORMAL.out
                 .splitCsv( header: true, sep : '\t' )
                 .map { row -> tuple( ['sample_id': row.sample_id, 'match_normal_id': row.match_normal_id, 'pdid' : row.pdid], row.bam, row.bai, row.bas, row.met, row.bam_match, row.bai_match, row.snv_vcf, row.snv_vcf_tbi ) },
                 snv_vcfilter_config,
@@ -100,11 +85,9 @@ workflow LCMB {
                 high_depth_regions_tbi,
                 sigprofiler_genome
             )
-
-
         }
         else {
-            LCMB_FILTER_SNV_MATCH(
+            LCMB_FILTER_SNV_UNMATCH(
                 ch_samplesheet_filter_snv,
                 snv_vcfilter_config,
                 snv_rho_threshold,
@@ -138,7 +121,7 @@ workflow LCMB {
 
 
             LCMB_FILTER_INDEL_MATCH(
-                CONPAIR_FILTER_WITH_MATCH_NORMAL.out
+                CONPAIR_FILTER_WITHOUT_MATCH_NORMAL.out
                 .splitCsv( header: true, sep : '\t' )
                 .map { row -> tuple( ['sample_id': row.sample_id, 'match_normal_id': row.match_normal_id, 'pdid' : row.pdid], row.bam, row.bai, row.bas, row.met, row.bam_match, row.bai_match, row.indel_vcf, row.indel_vcf_tbi ) },
                 indel_vcfilter_config,
@@ -151,7 +134,7 @@ workflow LCMB {
             )
         }
         else {
-            LCMB_FILTER_INDEL_MATCH(
+            LCMB_FILTER_INDEL_UNMATCH(
                 ch_samplesheet_filter_indel,
                 indel_vcfilter_config,
                 indel_rho_threshold,
@@ -170,7 +153,7 @@ workflow LCMB {
             // only run this if there are more than 2 sample per donor (genotype_bin only has one column)
             // phylogenetics without tree topology provided
             PHYLOGENETICS(
-                LCMB_FILTER_SNV_MATCH.out
+                LCMB_FILTER_SNV_UNMATCH.out
                 .filter { it[3].readLines().first().split(' ').size() > 2 },
                 'phylogenetics_snp_out',
                 sigprofiler_genome
@@ -182,7 +165,7 @@ workflow LCMB {
                     PHYLOGENETICS.out
                     .filter { it != null }
                     .combine(
-                        LCMB_FILTER_INDEL_MATCH.out
+                        LCMB_FILTER_INDEL_UNMATCH.out
                         .filter { it[3].readLines().first().split(' ').size() > 2 },
                         by: 0
                     ),
@@ -201,7 +184,7 @@ workflow LCMB {
                 }
                 .unique()
                 .combine(
-                    LCMB_FILTER_INDEL_MATCH.out
+                    LCMB_FILTER_INDEL_UNMATCH.out
                     .filter { it[3].readLines().first().split(' ').size() > 2 },
                     by: 0
                 ),
