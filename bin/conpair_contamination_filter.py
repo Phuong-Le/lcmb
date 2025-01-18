@@ -13,7 +13,7 @@ def filter_by_concordance(samples_dict, concordance, concordance_threshold = 90)
     """take a concordance dictionary and filter out samples that match to exactly one match normal
 
     Args:
-        samples_dict (dict): sample dictionary with key as sample ID and values being all elements in the sample paths file
+        samples_dict (dict): sample dictionary with key as sample ID and values being a list with first element as sample ID and second element as match_normal_id
         concordance (dataframe): dataframe that contains concordance information between samples and all match normal
         concordance_threshold (float, optional): concordance threshold taking values from 0-100. Defaults to 90.
 
@@ -62,7 +62,7 @@ def get_contaminated_samples(contamination, contamination_threshold_samples = 0.
 
 def filter_contaminations(samples_path, concordance_path, contamination_path, outfile, concordance_threshold = 90, contamination_threshold_samples = 0.3, contamination_threshold_match = 5):
     samples = pd.read_csv(samples_path, sep = '\t')
-    samples_dict = {row[0]: row for row in samples.to_numpy().tolist()}
+    samples_dict = {row[0]: row for row in samples[['sample_id', 'match_normal_id']].to_numpy().tolist()}
 
     concordance = pd.read_csv(concordance_path, sep = '\t', names = ['sample_id', 'match_id', 'concordance', 'fraction_of_markers'])
     contamination = pd.read_csv(contamination_path, sep = '\t', names = ['sample_id', 'match_id', 'contamination_sample', 'contamination_match'])

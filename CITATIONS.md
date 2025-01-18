@@ -1,4 +1,4 @@
-# nf-core/lcmb: Citations
+# nf-core/sangersomatic: Citations
 
 ## [nf-core](https://pubmed.ncbi.nlm.nih.gov/32055031/)
 
@@ -10,27 +10,42 @@
 
 ## Pipeline tools
 
-- [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+- [gatk](https://genome.cshlp.org/content/20/9/1297)
 
-> Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
+> McKenna A, Hanna M, Banks E, Sivachenko A, Cibulskis K, Kernytsky A, Garimella K, Altshuler D, Gabriel S, Daly M, DePristo MA. (2010). The Genome Analysis Toolkit: a MapReduce framework for analyzing next-generation DNA sequencing data. Genome Res, 20:1297-303. DOI: 10.1101/gr.107524.110.
 
-- [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
+- [hairpin](https://www.nature.com/articles/s41596-020-00437-6)
 
-> Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
+> Ellis, P., Moore, L., Sanders, M.A. et al. Reliable detection of somatic mutations in solid tissues by laser-capture microdissection and low-input DNA sequencing. Nat Protoc 16, 841–871 (2021). https://doi.org/10.1038/s41596-020-00437-6
+
+> CASM IT, Sanger institute, tools are [here](https://github.com/cancerit/hairpin-wrapper)
+
+- [vafCorrect](https://github.com/cancerit/vafCorrect)
+
+> CASM IT, Sanger institute
+
+- [SigProfilerMatrixGenerator](https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-019-6041-2)
+
+> Bergstrom EN, Huang MN, Mahto U, Barnes M, Stratton MR, Rozen SG, and Alexandrov LB (2019) SigProfilerMatrixGenerator: a tool for visualizing and exploring patterns of small mutational events. BMC Genomics 20, Article number: 685.
+
+- [SigProfilerPlotting](https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-019-6041-2)
+
+> Bergstrom EN, Huang MN, Mahto U, Barnes M, Stratton MR, Rozen SG, and Alexandrov LB (2019) SigProfilerMatrixGenerator: a tool for visualizing and exploring patterns of small mutational events. BMC Genomics 20, Article number: 685.
+
+- [MPBoot](https://bmcecolevol.biomedcentral.com/articles/10.1186/s12862-018-1131-3)
+
+> Hoang, D.T., Vinh, L.S., Flouri, T. et al. MPBoot: fast phylogenetic maximum parsimony tree inference and bootstrap approximation. BMC Evol Biol 18, 11 (2018). https://doi.org/10.1186/s12862-018-1131-3
+
+- [Sequoia](https://www.nature.com/articles/s41596-024-00962-8)
+
+> Coorens, T.H.H., Spencer Chapman, M., Williams, N. et al. Reconstructing phylogenetic trees from genome-wide somatic mutations in clonal samples. Nat Protoc 19, 1866–1886 (2024). https://doi.org/10.1038/s41596-024-00962-8
+
+- [treemut](https://github.com/NickWilliamsSanger/treemut)
+
+> Nicholas Williams, Sanger institute
 
 ## Software packaging/containerisation tools
 
-- [Anaconda](https://anaconda.com)
-
-  > Anaconda Software Distribution. Computer software. Vers. 2-2.4.0. Anaconda, Nov. 2016. Web.
-
-- [Bioconda](https://pubmed.ncbi.nlm.nih.gov/29967506/)
-
-  > Grüning B, Dale R, Sjödin A, Chapman BA, Rowe J, Tomkins-Tinch CH, Valieris R, Köster J; Bioconda Team. Bioconda: sustainable and comprehensive software distribution for the life sciences. Nat Methods. 2018 Jul;15(7):475-476. doi: 10.1038/s41592-018-0046-7. PubMed PMID: 29967506.
-
-- [BioContainers](https://pubmed.ncbi.nlm.nih.gov/28379341/)
-
-  > da Veiga Leprevost F, Grüning B, Aflitos SA, Röst HL, Uszkoreit J, Barsnes H, Vaudel M, Moreno P, Gatto L, Weber J, Bai M, Jimenez RC, Sachsenberg T, Pfeuffer J, Alvarez RV, Griss J, Nesvizhskii AI, Perez-Riverol Y. BioContainers: an open-source and community-driven framework for software standardization. Bioinformatics. 2017 Aug 15;33(16):2580-2582. doi: 10.1093/bioinformatics/btx192. PubMed PMID: 28379341; PubMed Central PMCID: PMC5870671.
 
 - [Docker](https://dl.acm.org/doi/10.5555/2600239.2600241)
 

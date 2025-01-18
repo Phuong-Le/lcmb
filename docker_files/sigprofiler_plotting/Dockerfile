@@ -15,7 +15,9 @@ RUN apt-get update && apt-get upgrade -y && \
 WORKDIR /usr/src/app
 
 # Install SigProfilerPlotting using pip
-RUN pip3 install SigProfilerPlotting==1.3.21
+RUN pip3 install pandas==1.5.3 numpy==1.26.1 matplotlib==3.8.2 pillow==10.1.0
 
-# Test that SigProfilerMatrixGenerator is installed and can be called 
+RUN pip3 install SigProfilerPlotting==1.3.24
+
+# Test that SigProfilerMatrixGenerator is installed and can be called
 RUN SigProfilerPlotting --help

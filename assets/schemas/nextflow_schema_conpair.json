@@ -17,7 +17,7 @@
                     "format": "file-path",
                     "exists": true,
                     "schema": "assets/schemas/schema_input_conpair.json",
-                    "pattern": ["^\\S+\\.csv$", "^\\S+\\.tsv$"],
+                    "pattern": ["^\\S+\\.tsv$"],
                     "description": "Path to comma-separated or tab-seperated file containing information about the samples in the experiment.",
                     "help_text": "See [usage docs](docs/usage.md).",
                     "fa_icon": "fas fa-file-csv"
@@ -123,6 +123,10 @@
                     "type": "number",
                     "description": "rho threshold below which variant is filtered out",
                     "default": 0.1
+                },
+                "sigprofiler_genome": {
+                    "type": "string",
+                    "description": "genome to input to sigprofiler"
                 }
             }
         },
@@ -249,7 +253,7 @@
                     "format": "file-path",
                     "exists": true,
                     "mimetype": "text/plain",
-                    "description": "Path to marker bed file, used in the conpair step for contamination checking",
+                    "description": "Path to marker txt file, used in the conpair step for contamination checking",
                     "help_text": "This parameter is *mandatory* if run_conpair is true and if `--genome` and `--custom_genome` is not specified.",
                     "fa_icon": "far fa-file-code"
                 },

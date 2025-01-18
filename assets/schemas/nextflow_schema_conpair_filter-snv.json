@@ -17,7 +17,7 @@
                     "format": "file-path",
                     "exists": true,
                     "schema": "assets/schemas/schema_input_conpair_filter-snv.json",
-                    "pattern": ["^\\S+\\.csv$", "^\\S+\\.tsv$"],
+                    "pattern": ["^\\S+\\.tsv$"],
                     "description": "Path to comma-separated or tab-seperated file containing information about the samples in the experiment.",
                     "help_text": "See [usage docs](docs/usage.md).",
                     "fa_icon": "fas fa-file-csv"
