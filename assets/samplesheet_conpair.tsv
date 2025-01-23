@@ -1,0 +1,3 @@
+sample_id	match_normal_id	pdid	bam	bai	bam_match	bai_match
+PD47151n_lo0002	PD47151b	PD47151	/path/to/PD47151n_lo0002.small.bam	/path/to/PD47151n_lo0002.small.bam.bai	/path/to/PD47151b.small.bam	/path/to/PD47151b.small.bam.bai
+PD47151n_lo0011	PD47151b	PD47151	/path/to/PD47151n_lo0011.small.bam	/path/to/PD47151n_lo0011.small.bam.bai	/path/to/PD47151b.small.bam	/path/to/PD47151b.small.bam.bai
