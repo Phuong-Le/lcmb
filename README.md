@@ -154,7 +154,7 @@ The input sample sheet should be in a tab delimited format (extension must be .t
 
 | Column    | Description                                                                                                                                                                            |
 | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| REQUIRED COLUMNS FOR ALL SUBWORKFLOWS |
+| REQUIRED COLUMNS FOR ALL SUBWORKFLOWS | |
 | `pdid` |  Donor ID for your sample |                                                            |
 | REQUIRED COLUMNS FOR CONPAIR, FILTER_SNV and/or FILTER_INDEL (`--run_conpair true` and/or `--run_filter_snv true` and/or `--run_filter_indel true` |
 | `sample_id`  | sample ID, must be unique |
