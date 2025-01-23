@@ -7,20 +7,18 @@
 
 ## Samplesheet input
 
-The input sample sheet should be in a tab delimited format (extension must be .tsv), like [samplesheet.tsv](../assets/samplesheet.tsv). Your input should contain the following columns depending which subworkflows you want to run (column names must be accurate but no need to be in this order, redundant columns will be ignored)
-
-Examples of a samplesheet that meets the minimal column requirements for relevant scenarios are as follows
+The input sample sheet should be in a tab delimited format (extension must be .tsv). The required columns depend on which subworkflows you want to run (column names must be accurate but no need to be in this order, redundant columns will be ignored). Examples of a samplesheet that meets the minimal column requirements for relevant scenarios are as follows
 
 | Scenario | Example |
 | -------- | ------- |
-| Running conpair only | [here](assets/samplesheet_conpair.tsv) |
-| Running filter SNV only or Running filter SNV + phylogenetics for SNVs | [here](assets/samplesheet_filter-snv_phylogenetics.tsv) |
-| Running filter INDELs only | [here](assets/samplesheet_filter-indel.tsv) |
-| Running filter INDELs + phylogenetics without running filter SNVs | [here](assets/samplesheet_filter-indel_phylogenetics.tsv) |
-| Running filter SNVs + filter INDELS or filter SNVs + filter INDELS + phylogenetics or full pipeline | [here](assets/samplesheet_full_pipeline.tsv) |
-| Running phylogenetics pipeline (no filtering) for SNVs then use topology from SNVs to run phylogenetics pipeline for INDELs | [here](assets/samplesheet_phylogenetics_snv-then-indel.tsv) |
-| Running phylogenetics pipeline (no filtering) with building tree topology (usually used for SNVs) | [here](assets/samplesheet_phylogenetics_no_topology.tsv) |
-| Running phylogenetics pipeline (no filtering) without building tree topology (topology should be provided, usually used for INDELs) | [here](assets/samplesheet_phylogenetics_provided_topology.tsv) |
+| Running conpair only | [here](../assets/samplesheet_conpair.tsv) |
+| Running filter SNV only or Running filter SNV + phylogenetics for SNVs | [here](../assets/samplesheet_filter-snv_phylogenetics.tsv) |
+| Running filter INDELs only | [here](../assets/samplesheet_filter-indel.tsv) |
+| Running filter INDELs + phylogenetics without running filter SNVs | [here](../assets/samplesheet_filter-indel_phylogenetics.tsv) |
+| Running filter SNVs + filter INDELS or filter SNVs + filter INDELS + phylogenetics or full pipeline | [here](../assets/samplesheet_full_pipeline.tsv) |
+| Running phylogenetics pipeline (no filtering) for SNVs then use topology from SNVs to run phylogenetics pipeline for INDELs | [here](../assets/samplesheet_phylogenetics_snv-then-indel.tsv) |
+| Running phylogenetics pipeline (no filtering) with building tree topology (usually used for SNVs) | [here](../assets/samplesheet_phylogenetics_no_topology.tsv) |
+| Running phylogenetics pipeline (no filtering) without building tree topology (topology should be provided, usually used for INDELs) | [here](../assets/samplesheet_phylogenetics_provided_topology.tsv) |
 
 
 Detailed descriptions of the requirements are as follows

@@ -149,7 +149,7 @@ git clone git@github.com:Phuong-Le/lcmb.git
 
 > [NOT PUBLIC YET] Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-The input sample sheet should be in a tab delimited format (extension must be .tsv), like [samplesheet.tsv](assets/samplesheet.tsv). The column requirements depends on which subworkflows you would like to run (column names must be accurate but no need to be in this order, redundant columns will be ignored):
+The input sample sheet should be in a tab delimited format (extension must be .tsv), like [samplesheet_full_pipeline.tsv](assets/samplesheet_full_pipeline.tsv). The column requirements depends on which subworkflows you would like to run (column names must be accurate but no need to be in this order, redundant columns will be ignored):
 
 
 | Column    | Description                                                                                                                                                                            |
@@ -268,6 +268,7 @@ We thank the following people for their extensive assistance in the development 
 Chloe Pacyna
 Yichen Wang
 Shriram Bhosle
+Daniel Leongamornlert
 
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
