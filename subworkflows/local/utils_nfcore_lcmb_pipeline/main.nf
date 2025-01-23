@@ -32,6 +32,12 @@ workflow PIPELINE_INITIALISATION {
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
     input             //  string: Path to input samplesheet
+    run_conpair
+    run_filter_snv
+    run_filter_indel
+    run_phylogenetics
+    snv_then_indel
+    provided_topology
 
     main:
 
@@ -48,15 +54,6 @@ workflow PIPELINE_INITIALISATION {
     )
 
     //
-    // Validate parameters and generate parameter summary to stdout
-    //
-    UTILS_NFSCHEMA_PLUGIN (
-        workflow,
-        validate_params,
-        null
-    )
-
-    //
     // Check config provided to the pipeline
     //
     UTILS_NFCORE_PIPELINE (
@@ -68,32 +65,201 @@ workflow PIPELINE_INITIALISATION {
     //
     validateInputParameters()
 
-    //
-    // Create channel from input file provided through params.input
-    //
 
-    Channel
-        .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
-        .map {
-            meta, fastq_1, fastq_2 ->
-                if (!fastq_2) {
-                    return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-                } else {
-                    return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
+    // Checking parameters
+    // defining place holders
+    ch_samplesheet_conpair = null
+    ch_samplesheet_filter_snv = null
+    ch_samplesheet_filter_indel = null
+    ch_samplesheet_phylogenetics = null
+    ch_samplesheet_snv_then_indel = null
+    ch_samplesheet_topology = null
+
+    if ( run_conpair == true ) {
+        if ( run_filter_snv == true ) {
+            if ( run_filter_indel == true ) {
+                if ( run_phylogenetics == true ) {
+                    UTILS_NFSCHEMA_PLUGIN (
+                    workflow,
+                    validate_params,
+                    "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv_filter-indel_phylogenetics.json"
+                    )
                 }
+                else {
+                    UTILS_NFSCHEMA_PLUGIN (
+                        workflow,
+                        validate_params,
+                        "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv_filter-indel.json"
+                    )
+                }
+            }
+            else {
+                if ( run_phylogenetics == true ) {
+                    UTILS_NFSCHEMA_PLUGIN (
+                    workflow,
+                    validate_params,
+                    "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv_phylogenetics.json"
+                    )
+                }
+                else {
+                    UTILS_NFSCHEMA_PLUGIN (
+                    workflow,
+                    validate_params,
+                    "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv.json"
+                    )
+                }
+            }
         }
-        .groupTuple()
-        .map { samplesheet ->
-            validateInputSamplesheet(samplesheet)
+        else if ( run_filter_indel == true ) {
+            if ( run_phylogenetics == true ) {
+                UTILS_NFSCHEMA_PLUGIN (
+                workflow,
+                validate_params,
+                "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-indel_phylogenetics.json"
+                )
+            }
+            else {
+                UTILS_NFSCHEMA_PLUGIN (
+                workflow,
+                validate_params,
+                "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-indel.json"
+                )
+            }
         }
-        .map {
-            meta, fastqs ->
-                return [ meta, fastqs.flatten() ]
+        else {
+            //  Can't run conpair then phylogenetics without filtering - these should be run separately
+            assert run_phylogenetics == false
+            // CONPAIR ONLY
+            UTILS_NFSCHEMA_PLUGIN (
+                    workflow,
+                    validate_params,
+                    "${projectDir}/assets/schemas/nextflow_schema_conpair.json"
+                )
         }
-        .set { ch_samplesheet }
+        // get samplesheet
+        Channel
+            .fromList(samplesheetToList(
+                input,
+                "${projectDir}/assets/schemas/schema_input_conpair.json"))
+            .set { ch_samplesheet_conpair }
+    }
+    else if ( run_filter_snv == true ) {
+        if ( run_filter_indel == true ) {
+            if ( run_phylogenetics == true ) {
+                UTILS_NFSCHEMA_PLUGIN (
+                workflow,
+                validate_params,
+                "${projectDir}/assets/schemas/nextflow_schema_filter-snv_filter-indel_phylogenetics.json"
+                )
+            }
+            else {
+                UTILS_NFSCHEMA_PLUGIN (
+                workflow,
+                validate_params,
+                "${projectDir}/assets/schemas/nextflow_schema_filter-snv_filter-indel.json"
+            )
+            }
+        }
+        else {
+            if ( run_phylogenetics == true ) {
+                UTILS_NFSCHEMA_PLUGIN (
+                workflow,
+                validate_params,
+                "${projectDir}/assets/schemas/nextflow_schema_filter-snv_phylogenetics.json"
+                )
+            }
+            else {
+                UTILS_NFSCHEMA_PLUGIN (
+                workflow,
+                validate_params,
+                "${projectDir}/assets/schemas/nextflow_schema_filter-snv.json"
+            )
+            }
+        }
+        // get samplesheet
+        Channel
+        .fromList(samplesheetToList(
+            input,
+            "${projectDir}/assets/schemas/schema_input_conpair_filter-snv.json"))
+        .set { ch_samplesheet_filter_snv }
+        if ( run_filter_indel == true ) {
+            Channel
+            .fromList(samplesheetToList(
+                input,
+                "${projectDir}/assets/schemas/schema_input_conpair_filter-indel.json"))
+            .set { ch_samplesheet_filter_indel }
+        }
+    }
+    else if ( run_filter_indel == true ) {
+        if ( run_phylogenetics == true ) {
+            UTILS_NFSCHEMA_PLUGIN (
+                workflow,
+                validate_params,
+                "${projectDir}/assets/schemas/nextflow_schema_filter-indel_phylogenetics.json"
+            )
+        }
+        else {
+            UTILS_NFSCHEMA_PLUGIN (
+                workflow,
+                validate_params,
+                "${projectDir}/assets/schemas/nextflow_schema_filter-indel.json"
+            )
+        }
+
+        // get samplesheet plus topology if applicable
+        Channel
+            .fromList(samplesheetToList(
+                input,
+                "${projectDir}/assets/schemas/schema_input_conpair_filter-indel.json"))
+            .set { ch_samplesheet_filter_indel }
+        if ( run_phylogenetics == true ) {
+            Channel
+            .fromList(samplesheetToList(
+                input,
+                "${projectDir}/assets/schemas/schema_input_topology.json"))
+            .set { ch_samplesheet_topology }
+        }
+    }
+    else if ( run_phylogenetics == true ) {
+        // PHYLOGENETICS ONLY
+        UTILS_NFSCHEMA_PLUGIN (
+            workflow,
+            validate_params,
+            "${projectDir}/assets/schemas/nextflow_schema_phylogenetics.json"
+            )
+        // get samplesheet
+        if ( snv_then_indel == true ) {
+            Channel
+            .fromList(samplesheetToList(
+                input,
+                "${projectDir}/assets/schemas/schema_input_phylogenetics_snv-then-indel.json"))
+            .set { ch_samplesheet_snv_then_indel }
+        }
+        else {
+            Channel
+            .fromList(samplesheetToList(
+                input,
+                "${projectDir}/assets/schemas/schema_input_phylogenetics.json"))
+            .set { ch_samplesheet_phylogenetics }
+            if ( provided_topology == true ) {
+                Channel
+                .fromList(samplesheetToList(
+                    input,
+                    "${projectDir}/assets/schemas/schema_input_topology.json"))
+                .set { ch_samplesheet_topology }
+            }
+        }
+
+    }
+
 
     emit:
-    samplesheet = ch_samplesheet
+    samplesheet_conpair = ch_samplesheet_conpair
+    samplesheet_filter_snv = ch_samplesheet_filter_snv
+    samplesheet_filter_indel = ch_samplesheet_filter_indel
+    samplesheet_phylogenetics = ch_samplesheet_phylogenetics
+    samplesheet_snv_then_indel = ch_samplesheet_snv_then_indel
+    samplesheet_topology = ch_samplesheet_topology
     versions    = ch_versions
 }
 
@@ -156,20 +322,20 @@ def validateInputParameters() {
     genomeExistsError()
 }
 
-//
-// Validate channels from input samplesheet
-//
-def validateInputSamplesheet(input) {
-    def (metas, fastqs) = input[1..2]
+// //
+// // Validate channels from input samplesheet
+// //
+// def validateInputSamplesheet(input) {
+//     def (metas, fastqs) = input[1..2]
 
-    // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
-    def endedness_ok = metas.collect{ meta -> meta.single_end }.unique().size == 1
-    if (!endedness_ok) {
-        error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
-    }
+//     // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
+//     def endedness_ok = metas.collect{ meta -> meta.single_end }.unique().size == 1
+//     if (!endedness_ok) {
+//         error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
+//     }
 
-    return [ metas[0], fastqs ]
-}
+//     return [ metas[0], fastqs ]
+// }
 //
 // Get attribute from genome config file e.g. fasta
 //
@@ -195,34 +361,34 @@ def genomeExistsError() {
         error(error_string)
     }
 }
-//
-// Generate methods description for MultiQC
-//
-def toolCitationText() {
-    // TODO nf-core: Optionally add in-text citation tools to this list.
-    // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "Tool (Foo et al. 2023)" : "",
-    // Uncomment function in methodsDescriptionText to render in MultiQC report
-    def citation_text = [
-            "Tools used in the workflow included:",
-            "FastQC (Andrews 2010),",
-            "MultiQC (Ewels et al. 2016)",
-            "."
-        ].join(' ').trim()
+// //
+// // Generate methods description for MultiQC
+// //
+// def toolCitationText() {
+//     // TODO nf-core: Optionally add in-text citation tools to this list.
+//     // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "Tool (Foo et al. 2023)" : "",
+//     // Uncomment function in methodsDescriptionText to render in MultiQC report
+//     def citation_text = [
+//             "Tools used in the workflow included:",
+//             "FastQC (Andrews 2010),",
+//             "MultiQC (Ewels et al. 2016)",
+//             "."
+//         ].join(' ').trim()
 
-    return citation_text
-}
+//     return citation_text
+// }
 
-def toolBibliographyText() {
-    // TODO nf-core: Optionally add bibliographic entries to this list.
-    // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
-    // Uncomment function in methodsDescriptionText to render in MultiQC report
-    def reference_text = [
-            "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>",
-            "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>"
-        ].join(' ').trim()
+// def toolBibliographyText() {
+//     // TODO nf-core: Optionally add bibliographic entries to this list.
+//     // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
+//     // Uncomment function in methodsDescriptionText to render in MultiQC report
+//     def reference_text = [
+//             "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>",
+//             "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>"
+//         ].join(' ').trim()
 
-    return reference_text
-}
+//     return reference_text
+// }
 
 def methodsDescriptionText(mqc_methods_yaml) {
     // Convert  to a named map so can be used as with familar NXF ${workflow} variable syntax in the MultiQC YML file

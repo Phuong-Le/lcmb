@@ -1,0 +1,2 @@
+pdid	nr_path	nv_path	genotype_bin_path	topology
+PD47151	/path/to/filter_indel_out/PD47151/NR_somatic_noartefacts.txt	/path/to/filter_indel_out/PD47151/NV_somatic_noartefacts.txt	/path/to/filter_indel_out/PD47151/genotype_bin.txt	/path/to/phylogenetics_snp_out/PD47151/PD47151.fasta.treefile

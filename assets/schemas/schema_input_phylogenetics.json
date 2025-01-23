@@ -1,0 +1,38 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/sangersomatic/master/assets/schema_input.json",
+    "title": "nf-core/sangersomatic pipeline - params.input schema",
+    "description": "Schema for the file provided with params.input",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "properties": {
+            "pdid": {
+                "type": "string",
+                "pattern": "^\\S+$",
+                "errorMessage": "Donor ID (PDID) must be provided and cannot contain spaces",
+                "description": "Donor ID (PDID), cannot contain spaces",
+                "meta": ["pdid"]
+            },
+            "nr_path": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "description": "path to NR file (reads supporting variants) for donor <pdid>"
+            },
+            "nv_path": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "description": "path to NV file (depths at the variant locus) for donor <pdid>"
+            },
+            "genotype_bin_path": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "description": "path to genotype_bin file for donor <pdid>"
+            }
+        },
+        "required": ["pdid", "nr_path", "nv_path", "genotype_bin_path"]
+    }
+}

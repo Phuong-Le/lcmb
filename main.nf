@@ -15,7 +15,8 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { LCMB  } from './workflows/lcmb'
+include { LCMB_MATCH  } from './workflows/lcmb_match'
+include { LCMB_UNMATCH  } from './workflows/lcmb_unmatch'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_lcmb_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_lcmb_pipeline'
 include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_lcmb_pipeline'
@@ -30,6 +31,12 @@ include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_lcmb
 //   This is an example of how to use getGenomeAttribute() to fetch parameters
 //   from igenomes.config using `--genome`
 params.fasta = getGenomeAttribute('fasta')
+params.fai = getGenomeAttribute('fai')
+params.fasta_dict = getGenomeAttribute('fasta_dict')
+params.marker_bed = getGenomeAttribute('marker_bed')
+params.marker_txt = getGenomeAttribute('marker_txt')
+params.high_depth_regions = getGenomeAttribute('high_depth_regions')
+params.high_depth_regions_tbi = getGenomeAttribute('high_depth_regions_tbi')
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -43,18 +50,115 @@ params.fasta = getGenomeAttribute('fasta')
 workflow NFCORE_LCMB {
 
     take:
-    samplesheet // channel: samplesheet read in from --input
+    with_match_normal
+    run_conpair
+    run_filter_snv
+    run_filter_indel
+    run_phylogenetics
+    samplesheet_conpair // channel: samplesheet read in from --input
+    samplesheet_filter_snv
+    samplesheet_filter_indel
+    samplesheet_phylogenetics
+    samplesheet_snv_then_indel
+    samplesheet_topology
+    input
+    fasta
+    fai
+    fasta_dict
+    marker_bed
+    marker_txt
+    concordance_threshold
+    contamination_threshold_samples
+    contamination_threshold_match
+    snv_vcfilter_config
+    snv_rho_threshold
+    indel_vcfilter_config
+    indel_rho_threshold
+    high_depth_regions
+    high_depth_regions_tbi
+    hairpin_genome
+    sigprofiler_genome
+    snv_then_indel
+    provided_topology
+    phylogenetics_outdir_basename
+
 
     main:
 
     //
     // WORKFLOW: Run pipeline
     //
-    LCMB (
-        samplesheet
-    )
-    emit:
-    multiqc_report = LCMB.out.multiqc_report // channel: /path/to/multiqc_report.html
+    if ( with_match_normal == true ) {
+        LCMB_MATCH (
+        run_conpair,
+        run_filter_snv,
+        run_filter_indel,
+        run_phylogenetics,
+        samplesheet_conpair,
+        samplesheet_filter_snv,
+        samplesheet_filter_indel,
+        samplesheet_phylogenetics,
+        samplesheet_snv_then_indel,
+        samplesheet_topology,
+        input,
+        fasta,
+        fai,
+        fasta_dict,
+        marker_bed,
+        marker_txt,
+        concordance_threshold,
+        contamination_threshold_samples,
+        contamination_threshold_match,
+        snv_vcfilter_config,
+        snv_rho_threshold,
+        indel_vcfilter_config,
+        indel_rho_threshold,
+        high_depth_regions,
+        high_depth_regions_tbi,
+        hairpin_genome,
+        sigprofiler_genome,
+        snv_then_indel,
+        provided_topology,
+        phylogenetics_outdir_basename
+        )
+    }
+    else {
+        LCMB_UNMATCH (
+        run_conpair,
+        run_filter_snv,
+        run_filter_indel,
+        run_phylogenetics,
+        samplesheet_conpair,
+        samplesheet_filter_snv,
+        samplesheet_filter_indel,
+        samplesheet_phylogenetics,
+        samplesheet_snv_then_indel,
+        samplesheet_topology,
+        input,
+        fasta,
+        fai,
+        fasta_dict,
+        marker_bed,
+        marker_txt,
+        concordance_threshold,
+        contamination_threshold_samples,
+        contamination_threshold_match,
+        snv_vcfilter_config,
+        snv_rho_threshold,
+        indel_vcfilter_config,
+        indel_rho_threshold,
+        high_depth_regions,
+        high_depth_regions_tbi,
+        hairpin_genome,
+        sigprofiler_genome,
+        snv_then_indel,
+        provided_topology,
+        phylogenetics_outdir_basename
+        )
+    }
+
+
+
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,6 +169,7 @@ workflow NFCORE_LCMB {
 workflow {
 
     main:
+
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
@@ -74,15 +179,52 @@ workflow {
         params.monochrome_logs,
         args,
         params.outdir,
-        params.input
+        params.input,
+        params.run_conpair,
+        params.run_filter_snv,
+        params.run_filter_indel,
+        params.run_phylogenetics,
+        params.snv_then_indel,
+        params.provided_topology
     )
 
     //
     // WORKFLOW: Run main workflow
     //
     NFCORE_LCMB (
-        PIPELINE_INITIALISATION.out.samplesheet
+        params.with_match_normal,
+        params.run_conpair,
+        params.run_filter_snv,
+        params.run_filter_indel,
+        params.run_phylogenetics,
+        PIPELINE_INITIALISATION.out.samplesheet_conpair,
+        PIPELINE_INITIALISATION.out.samplesheet_filter_snv,
+        PIPELINE_INITIALISATION.out.samplesheet_filter_indel,
+        PIPELINE_INITIALISATION.out.samplesheet_phylogenetics,
+        PIPELINE_INITIALISATION.out.samplesheet_snv_then_indel,
+        PIPELINE_INITIALISATION.out.samplesheet_topology,
+        params.input,
+        params.fasta,
+        params.fai,
+        params.fasta_dict,
+        params.marker_bed,
+        params.marker_txt,
+        params.concordance_threshold,
+        params.contamination_threshold_samples,
+        params.contamination_threshold_match,
+        params.snv_vcfilter_config,
+        params.snv_rho_threshold,
+        params.indel_vcfilter_config,
+        params.indel_rho_threshold,
+        params.high_depth_regions,
+        params.high_depth_regions_tbi,
+        params.hairpin_genome,
+        params.sigprofiler_genome,
+        params.snv_then_indel,
+        params.provided_topology,
+        params.phylogenetics_outdir_basename
     )
+
     //
     // SUBWORKFLOW: Run completion tasks
     //
@@ -93,7 +235,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NFCORE_LCMB.out.multiqc_report
+        null
     )
 }
 
