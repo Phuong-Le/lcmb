@@ -154,38 +154,36 @@ The input sample sheet should be in a tab delimited format (extension must be .t
 
 | Column    | Description                                                                                                                                                                            |
 | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-
-REQUIRED COLUMNS FOR ALL SUBWORKFLOWS
+| REQUIRED COLUMNS FOR ALL SUBWORKFLOWS  |
 | `pdid` |  Donor ID for your sample |                                                            |
-| REQUIRED COLUMNS FOR CONPAIR, FILTER_SNV and/or FILTER_INDEL (`--run_conpair true` and/or `--run_filter_snv true` and/or `--run_filter_indel true` |
+| REQUIRED COLUMNS FOR CONPAIR, FILTER_SNV and/or FILTER_INDEL (`--run_conpair true` and/or `--run_filter_snv true` and/or `--run_filter_indel true`) |
 | `sample_id`  | sample ID, must be unique |
 | `match_normal_id` |  ID for your match normal sample |                                                            |
 | `bam` | bam file for `sample_id`, must exist |                                                       |
 | `bai` | tabix index file for `bam`, must exist |
 | `bam_match` | bam file for `match_normal_id`, must exist |
 | `bai_match` | tabix index file for `bam_match`, must exist |
-
-REQUIRED COLUMNS FOR FILTER_SNV and/or FILTER_INDEL PIPELINE (`--run_filter_snv true` and/or `--run_filter_indel true`)
+| REQUIRED COLUMNS FOR FILTER_SNV and/or FILTER_INDEL PIPELINE (`--run_filter_snv true` and/or `--run_filter_indel true`)  |
 | `bas` | bam status file for `bam`, must exist |
 | `met` | met (samtools markedup) file for `bam`, must exist |
-| REQUIRED COLUMNS FOR FILTER_SNV (`--run_filter_snv true`) |
+| REQUIRED COLUMNS FOR FILTER_SNV (`--run_filter_snv true`)  |
 | `snv_vcf` | VCF file for the SNVs of `sample_id`, must exist |
 | `snv_vcf_tbi` | tabix index file for VCF file for `snv_vcf_tbi`, must exist |
-| REQUIRED COLUMNS FOR FILTER_INDEL (`--run_filter_indel true`) |
+| REQUIRED COLUMNS FOR FILTER_INDEL (`--run_filter_indel true`)  |
 | `indel_vcf` | VCF file for the indels of `sample_id`, must exist |
 | `indel_vcf_tbi` | tabix index file for VCF file for `indel_vcf_tbi`, must exist |
-| REQUIRED COLUMNS FOR PHYLOGENETICS FOR BOTH SNVs AND INDELs WITHOUT FILTERING SNVs OR INDELs (`--run_phylogenetics true --run_filter_snv alse --run_filter_indel false --snv_then_indel true`)
+| REQUIRED COLUMNS FOR PHYLOGENETICS FOR BOTH SNVs AND INDELs WITHOUT FILTERING SNVs OR INDELs (`--run_phylogenetics true --run_filter_snv false --run_filter_indel false --snv_then_indel true`)  |
 | `nr_path_snv` | NR file (reads supporting variants) for SNVs for `pdid`, must exist |
 | `nv_path_snv` | NV file (depths at the variant locus) for SNVs for `pdid`, must exist |
 | `genotype_bin_path_snv` | binary genotype file for SNVs for `pdid`, must exist |
 | `nr_path_indel` | NR file (reads supporting variants) for INDELs for `pdid`, must exist |
 | `nv_path_indel` | NV file (depths at the variant locus) for INDELs for `pdid`, must exist |
 | `genotype_bin_path_indel` | binary genotype file for INDELs for `pdid`, must exist |
-| REQUIRED COLUMNS FOR PHYLOGENETICS or PHYLOGENETICS-GIVEN-TREE-TOPOLOGY WITHOUT RUNNNING FILTERING SNVs OR INDELs (`--run_phylogenetics rue --run_filter_snv false --run_filter_indel false --snv_then_indel [false/null]`)
+| REQUIRED COLUMNS FOR PHYLOGENETICS or PHYLOGENETICS-GIVEN-TREE-TOPOLOGY WITHOUT RUNNNING FILTERING SNVs OR INDELs (`--run_phylogenetics true --run_filter_snv false --run_filter_indel false --snv_then_indel [false/null]`)  |
 | `nr_path` | NR file (reads supporting variants) for `pdid`, must exist |
 | `nv_path` | NV file (depths at the variant locus) for `pdid`, must exist |
 | `genotype_bin_path` | binary genotype file for `pdid`, must exist |
-| REQUIRED COLUMNS FOR PHYLOGENETICS-GIVEN-TREE-TOPOLOGY WITHOUT RUNNNING FILTERING SNVs (`--run_phylogenetics true --run_filter_snv false -run_filter_indel true`, or `--run_phylogenetics true --run_filter_snv false --run_filter_indel false --with_topology true`)
+| REQUIRED COLUMNS FOR PHYLOGENETICS-GIVEN-TREE-TOPOLOGY WITHOUT RUNNNING FILTERING SNVs (`--run_phylogenetics true --run_filter_snv false --run_filter_indel true`, or `--run_phylogenetics true --run_filter_snv false --run_filter_indel false --with_topology true`)  |
 | `topology` | tree topology file for `pdid`, must exist |
 
 
