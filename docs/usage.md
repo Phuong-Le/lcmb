@@ -25,7 +25,7 @@ Detailed descriptions of the requirements are as follows
 
 ##### Conpair pipeline
 
-Conpair pipeline (`params.run_conpair==true`) requires the following columns `sample_id`, `match_normal_id`, `pdid`, `bam`, `bai`, `bam_match `, and `bai_match`. An example of a samplesheet for a conpair workflow only can be found [here](assets/samplesheet_conpair.tsv)
+Conpair pipeline (`params.run_conpair==true`) requires the following columns `sample_id`, `match_normal_id`, `pdid`, `bam`, `bai`, `bam_match `, and `bai_match`. An example of a samplesheet for a conpair workflow only can be found [here](../assets/samplesheet_conpair.tsv)
 
 ##### Filter SNVs
 
