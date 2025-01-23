@@ -154,7 +154,8 @@ The input sample sheet should be in a tab delimited format (extension must be .t
 
 | Column    | Description                                                                                                                                                                            |
 | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
- REQUIRED COLUMNS FOR ALL SUBWORKFLOWS
+
+REQUIRED COLUMNS FOR ALL SUBWORKFLOWS
 | `pdid` |  Donor ID for your sample |                                                            |
 | REQUIRED COLUMNS FOR CONPAIR, FILTER_SNV and/or FILTER_INDEL (`--run_conpair true` and/or `--run_filter_snv true` and/or `--run_filter_indel true` |
 | `sample_id`  | sample ID, must be unique |
@@ -163,7 +164,8 @@ The input sample sheet should be in a tab delimited format (extension must be .t
 | `bai` | tabix index file for `bam`, must exist |
 | `bam_match` | bam file for `match_normal_id`, must exist |
 | `bai_match` | tabix index file for `bam_match`, must exist |
- REQUIRED COLUMNS FOR FILTER_SNV and/or FILTER_INDEL PIPELINE (`--run_filter_snv true` and/or `--run_filter_indel true`)
+
+REQUIRED COLUMNS FOR FILTER_SNV and/or FILTER_INDEL PIPELINE (`--run_filter_snv true` and/or `--run_filter_indel true`)
 | `bas` | bam status file for `bam`, must exist |
 | `met` | met (samtools markedup) file for `bam`, must exist |
 | REQUIRED COLUMNS FOR FILTER_SNV (`--run_filter_snv true`) |
