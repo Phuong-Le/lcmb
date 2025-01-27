@@ -17,6 +17,8 @@
 
 ## Introduction
 
+NOTES: spectra plotting is temporarily turned off for the branches due to an error in SigProfilerPlotting waiting to be fixed
+
 **lcmb** is a bioinformatics pipeline that processes sequencing data from LCMB pipeline to obtain clean somatic mutations
 
 <!-- TODO nf-core:

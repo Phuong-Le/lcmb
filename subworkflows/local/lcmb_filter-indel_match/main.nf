@@ -1,5 +1,7 @@
 include { lcmbVcfilter } from "$projectDir/modules/local/lcmb_vcfilter"
-include { cgpVaf } from "$projectDir/modules/local/cgpvaf"
+include { getChromCgpVaf } from "$projectDir/modules/local/get_chrom_cgpvaf"
+include { cgpVafChrom } from "$projectDir/modules/local/cgpvaf_chrom"
+include { cgpVafConcat } from "$projectDir/modules/local/cgpvaf_concat"
 include { betaBinomFilterIndex } from "$projectDir/modules/local/betabinom_filter_index"
 include { betaBinomFilter } from "$projectDir/modules/local/betabinom_filter"
 include { matrixGeneratorSamples } from "$projectDir/modules/local/matrix_generator_samples"
@@ -27,14 +29,7 @@ workflow LCMB_FILTER_INDEL_MATCH {
             meta, bam, bai, bas, met, bam_match, bai_match, vcf, vcf_tbi ->
             tuple(meta, bam, bai, bas, met, bam_match, bai_match)
         }
-    // input.map{tuple("indel input: ", it)}.view()
-    // input.toList().size().view()
-    // input.
-    //     map {
-    //         meta, bam, bai, bas, met, bam_match, bai_match, vcf, vcf_tbi ->
-    //         tuple("vcfilterIN", meta, vcf)
-    //     }
-    //     .view()
+
     // LCMB vcfilter
     lcmbVcfilter(
         input.
@@ -45,29 +40,14 @@ workflow LCMB_FILTER_INDEL_MATCH {
         vcfilter_config,
         mut_type
     )
-    // input.
-    //     map {
-    //         meta, bam, bai, bas, met, bam_match, bai_match, vcf, vcf_tbi ->
-    //         tuple(meta, vcf)
-    //     }
-    //     .view { "lcmbFilter IN: ${it}" }
 
-    // lcmbVcfilter.out
-    //     // .view { "lcmbVcfilter out: ${it}" }
-    //     .combine( bams, by: 0 )
-    //     .map {
-    //         meta, vcf_filtered_gz, vcf_filtered_tbi, bam, bai, bas, met, bam_match, bai_match ->
-    //         tuple( meta.pdid, meta.sample_id, meta.match_normal_id, vcf_filtered_gz, vcf_filtered_tbi, bam, bai, bas, met, bam_match, bai_match )
-    //     }
-    //     .groupTuple ( by: [0, 2] )
-    //     .map {
-    //         pdid, sample_id, match_normal_id, vcf_filtered_gz, vcf_filtered_tbi, bam, bai, bas, met, bam_match, bai_match
-    //         -> tuple(pdid, sample_id, match_normal_id, vcf_filtered_gz, vcf_filtered_tbi, bam, bai, bas, met, bam_match[0], bai_match[0])
-    //     }
-    //     // .view { "cgpVAF IN: ${it}"}
     // cgpVaf
-    cgpVaf(
-        lcmbVcfilter.out
+    getChromCgpVaf(
+        fai,
+        high_depth_regions
+    )
+
+    vaf_input_files = lcmbVcfilter.out
         .combine( bams, by: 0 )
         .map {
             meta, vcf_filtered_gz, vcf_filtered_tbi, bam, bai, bas, met, bam_match, bai_match ->
@@ -77,7 +57,28 @@ workflow LCMB_FILTER_INDEL_MATCH {
         .map {
             pdid, sample_id, match_normal_id, vcf_filtered_gz, vcf_filtered_tbi, bam, bai, bas, met, bam_match, bai_match
             -> tuple(pdid, sample_id, match_normal_id[0], vcf_filtered_gz, vcf_filtered_tbi, bam, bai, bas, met, bam_match[0], bai_match[0])
-        },
+        }
+
+    cgpVafChrom(
+        vaf_input_files
+        .combine(
+            getChromCgpVaf.out
+            .splitCsv(header: false, sep: "\t")
+        ),
+        mut_type,
+        fasta,
+        fai,
+        high_depth_regions,
+        high_depth_regions_tbi
+    )
+
+    cgpVafConcat(
+        cgpVafChrom.out
+        .groupTuple( by: [0, 1, 2] )
+        .combine(
+            vaf_input_files,
+            by: [0, 1, 2]
+        ),
         mut_type,
         fasta,
         fai,
@@ -87,7 +88,7 @@ workflow LCMB_FILTER_INDEL_MATCH {
 
     // BetaBinomial filtering for germline and LCM artefacts based on cgpVaf (methods by Tim Coorens)
     betaBinomFilterIndex(
-        cgpVaf.out,
+        cgpVafConcat.out,
         mut_type,
         rho_threshold
     )

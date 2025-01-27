@@ -72,7 +72,7 @@ workflow LCMB_UNMATCH {
     // FILTER SNV
     if ( run_filter_snv == true ) {
         if ( run_conpair == true ) {
-            LCMB_FILTER_SNV_MATCH(
+            LCMB_FILTER_SNV_UNMATCH(
                 CONPAIR_FILTER_WITHOUT_MATCH_NORMAL.out
                 .splitCsv( header: true, sep : '\t' )
                 .map { row -> tuple( ['sample_id': row.sample_id, 'match_normal_id': row.match_normal_id, 'pdid' : row.pdid], row.bam, row.bai, row.bas, row.met, row.bam_match, row.bai_match, row.snv_vcf, row.snv_vcf_tbi ) },
@@ -120,7 +120,7 @@ workflow LCMB_UNMATCH {
             // )
 
 
-            LCMB_FILTER_INDEL_MATCH(
+            LCMB_FILTER_INDEL_UNMATCH(
                 CONPAIR_FILTER_WITHOUT_MATCH_NORMAL.out
                 .splitCsv( header: true, sep : '\t' )
                 .map { row -> tuple( ['sample_id': row.sample_id, 'match_normal_id': row.match_normal_id, 'pdid' : row.pdid], row.bam, row.bai, row.bas, row.met, row.bam_match, row.bai_match, row.indel_vcf, row.indel_vcf_tbi ) },

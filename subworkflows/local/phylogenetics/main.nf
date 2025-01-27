@@ -29,11 +29,11 @@ workflow PHYLOGENETICS { // phylogenetics workflow for SNVs
         outdir_basename
         )
 
-    // plotting
-    spectraPlottingBranches(
-        concatMatrices.out,
-        outdir_basename
-        )
+    // // plotting
+    // spectraPlottingBranches(
+    //     concatMatrices.out,
+    //     outdir_basename
+    //     )
 
     emit:
     getPhylogeny.out.topology
