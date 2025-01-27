@@ -29,9 +29,9 @@ workflow PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY {
         outdir_basename
         )
 
-    // plotting
-    spectraPlottingBranches(
-        concatMatrices.out,
-        outdir_basename
-        )
+    // // plotting
+    // spectraPlottingBranches(
+    //     concatMatrices.out,
+    //     outdir_basename
+    //     )
 }

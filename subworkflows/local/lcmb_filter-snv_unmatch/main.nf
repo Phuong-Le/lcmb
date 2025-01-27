@@ -1,6 +1,8 @@
 include { hairpinAnnotation } from "$projectDir/modules/local/hairpin_annotation"
 include { lcmbVcfilter } from "$projectDir/modules/local/lcmb_vcfilter"
-include { cgpVaf } from "$projectDir/modules/local/cgpvaf"
+include { getChromCgpVaf } from "$projectDir/modules/local/get_chrom_cgpvaf"
+include { cgpVafChrom } from "$projectDir/modules/local/cgpvaf_chrom"
+include { cgpVafConcat } from "$projectDir/modules/local/cgpvaf_concat"
 include { betaBinomFilterIndexUnmatch } from "$projectDir/modules/local/betabinom_filter_index_unmatch"
 include { betaBinomFilter } from "$projectDir/modules/local/betabinom_filter"
 include { matrixGeneratorSamples } from "$projectDir/modules/local/matrix_generator_samples"
@@ -44,8 +46,12 @@ workflow LCMB_FILTER_SNV_UNMATCH {
     )
 
     // cgpVaf
-    cgpVaf(
-        lcmbVcfilter.out
+    getChromCgpVaf(
+        fai,
+        high_depth_regions
+    )
+
+    vaf_input_files = lcmbVcfilter.out
         .combine( bams, by: 0 )
         .map {
             meta, vcf_filtered_gz, vcf_filtered_tbi, bam, bai, bas, met, bam_match, bai_match ->
@@ -55,7 +61,28 @@ workflow LCMB_FILTER_SNV_UNMATCH {
         .map {
             pdid, sample_id, match_normal_id, vcf_filtered_gz, vcf_filtered_tbi, bam, bai, bas, met, bam_match, bai_match
             -> tuple(pdid, sample_id, match_normal_id[0], vcf_filtered_gz, vcf_filtered_tbi, bam, bai, bas, met, bam_match[0], bai_match[0])
-        },
+        }
+
+    cgpVafChrom(
+        vaf_input_files
+        .combine(
+            getChromCgpVaf.out
+            .splitCsv(header: false, sep: "\t")
+        ),
+        mut_type,
+        fasta,
+        fai,
+        high_depth_regions,
+        high_depth_regions_tbi
+    )
+
+    cgpVafConcat(
+        cgpVafChrom.out
+        .groupTuple( by: [0, 1, 2] )
+        .combine(
+            vaf_input_files,
+            by: [0, 1, 2]
+        ),
         mut_type,
         fasta,
         fai,
@@ -65,7 +92,7 @@ workflow LCMB_FILTER_SNV_UNMATCH {
 
     // BetaBinomial filtering for germline and LCM artefacts based on cgpVaf (methods by Tim Coorens)
     betaBinomFilterIndexUnmatch(
-        cgpVaf.out,
+        cgpVafConcat.out,
         mut_type,
         rho_threshold
     )
