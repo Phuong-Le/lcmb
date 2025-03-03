@@ -25,7 +25,7 @@ parsed_args <- parse_arguments(args)
 libpath = parsed_args$libpath
 cgpvaf_out = parsed_args$cgpvaf_out
 match_normal_id = parsed_args$match_normal_id
-rho_threshold = parsed_args$rho_threshold
+rho_threshold = as.numeric(parsed_args$rho_threshold)
 outdir = parsed_args$outdir
 gender = parsed_args$gender
 }
