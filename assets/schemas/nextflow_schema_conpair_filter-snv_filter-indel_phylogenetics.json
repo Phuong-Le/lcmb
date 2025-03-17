@@ -109,7 +109,7 @@
             "title": "Options specific to filter_snv subworkflow",
             "type": "object",
             "fa_icon": "fas fa-terminal",
-            "required": ["snv_vcfilter_config", "snv_rho_threshold", "hairpin_genome", "sigprofiler_genome"],
+            "required": ["snv_vcfilter_config", "snv_rho_threshold", "hairpin2_input_json", "sigprofiler_genome"],
             "properties": {
                 "snv_vcfilter_config": {
                     "type": "string",
@@ -124,9 +124,13 @@
                     "description": "rho threshold below which variant is filtered out",
                     "default": 0.1
                 },
-                "hairpin_genome": {
+                "hairpin2_input_json": {
                     "type": "string",
-                    "description": "genome to input to hairpin"
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
+                    "description": "default hairpin2 input",
+                    "fa_icon": "far fa-file-code"
                 },
                 "sigprofiler_genome": {
                     "type": "string",

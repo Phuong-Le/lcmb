@@ -14,7 +14,7 @@ workflow LCMB_FILTER_SNV_UNMATCH {
     input
     vcfilter_config
     rho_threshold
-    hairpin_genome
+    hairpin2_input_json
     fasta
     fai
     high_depth_regions
@@ -34,13 +34,13 @@ workflow LCMB_FILTER_SNV_UNMATCH {
     // Hairpin annotations
     hairpinAnnotation(
         input,
-        hairpin_genome,
-        mut_type
+        mut_type,
+        hairpin2_input_json
         )
 
     // LCMB vcfilter
     lcmbVcfilter(
-        hairpinAnnotation.out,
+        hairpinAnnotation.out.vcf_annot_gz,
         vcfilter_config,
         mut_type
     )

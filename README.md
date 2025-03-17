@@ -201,7 +201,6 @@ nextflow run /path/to/lcmb/main.nf \
    --run_filter_snv true \
    --run_filter_indel true \
    --run_phylogenetics true \
-   --hairpin_genome hg38 \
    --sigprofiler_genome GRCh38 \
    --use_custom_genome true \
    --genome genome_label_in_custom_genome_config \ #eg your_genome_label
@@ -242,7 +241,6 @@ species=Human # please refer to docs/usage.md
 species_assembly=GRCh38 # please refer to docs/usage.md
 custom_genome_base=/lustre/scratch124/casm/team78pipelines/canpipe/live/ref/Homo_sapiens # please let me know if you're using a different genome so I can update the config for you
 genome=GRCh38_full_analysis_set_plus_decoy_hla # same as above
-hairpin_genome=hg38
 sigprofiler_genome=GRCh38
 
 with_match_normal=false
@@ -252,7 +250,7 @@ run_filter_indel=true
 run_phylogenetics=false
 
 bsub -cwd ${working_dir} -q week -o %J.out -e %J.err -R "select[mem>5000] rusage[mem=5000]" -M5000 -env "all" \
-    "nextflow run $script -c ${config_file} --input $input --outdir $outdir --run_conpair ${run_conpair} --run_filter_snv ${run_filter_snv} --run_filter_indel ${run_filter_indel} --run_phylogenetics ${run_phylogenetics}  --use_custom_genome true --custom_genome_base $custom_genome_base --genome ${genome} --hairpin_genome ${hairpin_genome} --sigprofiler_genome ${sigprofiler_genome} --with_match_normal ${with_match_normal} -profile singularity -resume"
+    "nextflow run $script -c ${config_file} --input $input --outdir $outdir --run_conpair ${run_conpair} --run_filter_snv ${run_filter_snv} --run_filter_indel ${run_filter_indel} --run_phylogenetics ${run_phylogenetics}  --use_custom_genome true --custom_genome_base $custom_genome_base --genome ${genome} --hairpin2_input_json ${hairpin2_input_json} --sigprofiler_genome ${sigprofiler_genome} --with_match_normal ${with_match_normal} -profile singularity -resume"
 ```
 
 ## Pipeline output
