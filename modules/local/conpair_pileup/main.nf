@@ -6,9 +6,9 @@ process conpairPileup {
     input:
     tuple val(match_normal_id), val(sample_id), path(bam), path(bai)
     path(marker_bed)
-    path(fasta)
-    path(fai)
-    path(fasta_dict)
+    path(fasta), stageAs: 'genome.fa'
+    path(fai), stageAs: 'genome.fa.fai'
+    path(fasta_dict), stageAs: 'genome.dict'
 
     output:
     tuple val(match_normal_id), val(sample_id), path(pileup)
