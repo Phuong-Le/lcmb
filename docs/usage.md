@@ -116,15 +116,15 @@ If phylogenetics is run (`params.run_phylogenetics==true`), there are three scen
 | `indel_vcf` | VCF file for the indels of `sample_id`, must exist |
 | `indel_vcf_tbi` | tabix index file for VCF file for `indel_vcf_tbi`, must exist |
 | REQUIRED COLUMNS FOR PHYLOGENETICS FOR BOTH SNVs AND INDELs WITHOUT FILTERING SNVs OR INDELs (`--run_phylogenetics true --run_filter_snv false --run_filter_indel false --snv_then_indel true`) ---------------------------------------------------- |
-| `nr_path_snv` | NR file (reads supporting variants) for SNVs for `pdid`, must exist |
-| `nv_path_snv` | NV file (depths at the variant locus) for SNVs for `pdid`, must exist |
+| `nr_path_snv` | NR file (depth at the variant locus) for SNVs for `pdid`, must exist |
+| `nv_path_snv` | NV file (reads supporting the variant) for SNVs for `pdid`, must exist |
 | `genotype_bin_path_snv` | binary genotype file for SNVs for `pdid`, must exist |
-| `nr_path_indel` | NR file (reads supporting variants) for INDELs for `pdid`, must exist |
-| `nv_path_indel` | NV file (depths at the variant locus) for INDELs for `pdid`, must exist |
+| `nr_path_indel` | NR file (depth at the variant locus) for INDELs for `pdid`, must exist |
+| `nv_path_indel` | NV file (reads supporting the variant) for INDELs for `pdid`, must exist |
 | `genotype_bin_path_indel` | binary genotype file for INDELs for `pdid`, must exist |
 | REQUIRED COLUMNS FOR PHYLOGENETICS or PHYLOGENETICS-GIVEN-TREE-TOPOLOGY WITHOUT RUNNNING FILTERING SNVs OR INDELs (`--run_phylogenetics true --run_filter_snv false --run_filter_indel false --snv_then_indel [false/null]`) ---------------------------------------------------- |
-| `nr_path` | NR file (reads supporting variants) for `pdid`, must exist |
-| `nv_path` | NV file (depths at the variant locus) for `pdid`, must exist |
+| `nr_path` | NR file (depth at the variant locus) for `pdid`, must exist |
+| `nv_path` | NV file (reads supporting the variant) for `pdid`, must exist |
 | `genotype_bin_path` | binary genotype file for `pdid`, must exist |
 | REQUIRED COLUMNS FOR PHYLOGENETICS-GIVEN-TREE-TOPOLOGY WITHOUT RUNNNING FILTERING SNVs (`--run_phylogenetics true --run_filter_snv false --run_filter_indel true`, or `--run_phylogenetics true --run_filter_snv false --run_filter_indel false --with_topology true`) ---------------------------------------------------- |
 | `topology` | tree topology file for `pdid`, must exist |
