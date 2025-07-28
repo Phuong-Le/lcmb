@@ -240,7 +240,7 @@ samplesheet=/path/to/samplesheet.tsv # or .csv, format should be consistent with
 
 species=Human # please refer to docs/usage.md
 species_assembly=GRCh38 # please refer to docs/usage.md
-custom_genome_base=/lustre/scratch124/casm/team78pipelines/canpipe/live/ref/Homo_sapiens # please let me know if you're using a different genome so I can update the config for you
+custom_genome_base=/lustre/scratch124/casm/references/pipeline_ref/Homo_sapiens # please let me know if you're using a different genome so I can update the config for you
 genome=GRCh38_full_analysis_set_plus_decoy_hla # same as above
 hairpin_genome=hg38
 sigprofiler_genome=GRCh38
