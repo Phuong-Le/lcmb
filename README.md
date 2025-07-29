@@ -235,7 +235,7 @@ module load ISG/singularity/3.11.4
 outdir=/path/to/outdir
 mkdir -p $outdir
 script=/path/to/lcmb/main.nf # should be part of this pipeline
-config_file=/path/to/lcmb/sanger_lsf.config # should be part of this pipeline
+config_file=/path/to/lcmb/conf/sanger_lsf.config # should be part of this pipeline
 samplesheet=/path/to/samplesheet.tsv # or .csv, format should be consistent with extension
 
 species=Human # please refer to docs/usage.md
@@ -252,7 +252,7 @@ run_filter_indel=true
 run_phylogenetics=false
 
 bsub -cwd ${working_dir} -q week -o %J.out -e %J.err -R "select[mem>5000] rusage[mem=5000]" -M5000 -env "all" \
-    "nextflow run $script -c ${config_file} --input $input --outdir $outdir --run_conpair ${run_conpair} --run_filter_snv ${run_filter_snv} --run_filter_indel ${run_filter_indel} --run_phylogenetics ${run_phylogenetics}  --use_custom_genome true --custom_genome_base $custom_genome_base --genome ${genome} --hairpin_genome ${hairpin_genome} --sigprofiler_genome ${sigprofiler_genome} --with_match_normal ${with_match_normal} -profile singularity -resume"
+    "nextflow run $script -c ${config_file} --input ${samplesheet} --outdir $outdir --run_conpair ${run_conpair} --run_filter_snv ${run_filter_snv} --run_filter_indel ${run_filter_indel} --run_phylogenetics ${run_phylogenetics}  --use_custom_genome true --custom_genome_base $custom_genome_base --genome ${genome} --hairpin_genome ${hairpin_genome} --sigprofiler_genome ${sigprofiler_genome} --with_match_normal ${with_match_normal} -profile singularity -resume"
 ```
 
 ## Pipeline output
