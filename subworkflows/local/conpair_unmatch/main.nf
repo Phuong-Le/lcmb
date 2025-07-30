@@ -47,7 +47,8 @@ workflow CONPAIR_FILTER_WITHOUT_MATCH_NORMAL {
     concordance_all = verifyConcordance(
         pileup_pairs,
         marker_txt)
-        .collectFile( name: 'conpair_out/concordance.txt', newLine: true )
+        .collectFile( name: 'concordance.txt', newLine: true, storeDir: "${params.outdir}/conpair_out" )
+
 
     // Filter by concordance
     conpairConcordanceUnmatchFilter(
@@ -86,7 +87,7 @@ workflow CONPAIR_FILTER_WITHOUT_MATCH_NORMAL {
     contamination_all = conpairContamination(
         concordance_filtered_pairs,
         marker_txt)
-        .collectFile( name: 'conpair_out/contamination.txt', newLine: true )
+        .collectFile( name: 'contamination.txt', newLine: true, storeDir: "${params.outdir}/conpair_out" )
 
     // Filtering contamination based on concordance and contamination
     conpairContaminationUnmatchFilter(
