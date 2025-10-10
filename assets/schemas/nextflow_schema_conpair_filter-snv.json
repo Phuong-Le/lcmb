@@ -109,7 +109,7 @@
             "title": "Options specific to filter_snv subworkflow",
             "type": "object",
             "fa_icon": "fas fa-terminal",
-            "required": ["snv_vcfilter_config", "snv_rho_threshold", "hairpin2_input_json", "sigprofiler_genome"],
+            "required": ["snv_vcfilter_config", "snv_rho_threshold", "hairpin2_input_json", "hairpin2_name_mapping", "sigprofiler_genome"],
             "properties": {
                 "snv_vcfilter_config": {
                     "type": "string",
@@ -130,6 +130,14 @@
                     "exists": true,
                     "mimetype": "text/plain",
                     "description": "default hairpin2 input",
+                    "fa_icon": "far fa-file-code"
+                },
+                "hairpin2_name_mapping": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
+                    "description": "default hairpin2 input for name mapping",
                     "fa_icon": "far fa-file-code"
                 },
                 "sigprofiler_genome": {

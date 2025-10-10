@@ -18,13 +18,13 @@
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "description": "path to NR file (reads supporting variants) for donor <pdid>"
+                "description": "path to NR file (depths at the variant locus) for donor <pdid>"
             },
             "nv_path": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "description": "path to NV file (depths at the variant locus) for donor <pdid>"
+                "description": "path to NV file (reads supporting variants) for donor <pdid>"
             },
             "genotype_bin_path": {
                 "type": "string",

@@ -46,6 +46,7 @@ workflow LCMB_MATCH {
     high_depth_regions
     high_depth_regions_tbi
     hairpin2_input_json
+    hairpin2_name_mapping
     sigprofiler_genome
     snv_then_indel
     provided_topology
@@ -94,6 +95,7 @@ workflow LCMB_MATCH {
                 snv_vcfilter_config,
                 snv_rho_threshold,
                 hairpin2_input_json,
+                hairpin2_name_mapping,
                 fasta,
                 fai,
                 high_depth_regions,
@@ -109,6 +111,7 @@ workflow LCMB_MATCH {
                 snv_vcfilter_config,
                 snv_rho_threshold,
                 hairpin2_input_json,
+                hairpin2_name_mapping,
                 fasta,
                 fai,
                 high_depth_regions,

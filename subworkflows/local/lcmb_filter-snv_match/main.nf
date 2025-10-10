@@ -15,6 +15,7 @@ workflow LCMB_FILTER_SNV_MATCH {
     vcfilter_config
     rho_threshold
     hairpin2_input_json
+    hairpin2_name_mapping
     fasta
     fai
     high_depth_regions
@@ -35,7 +36,8 @@ workflow LCMB_FILTER_SNV_MATCH {
     hairpinAnnotation(
         input,
         mut_type,
-        hairpin2_input_json
+        hairpin2_input_json,
+        hairpin2_name_mapping
         )
 
     // LCMB vcfilter
@@ -113,7 +115,7 @@ workflow LCMB_FILTER_SNV_MATCH {
 
     // generate mutation matrix for the samples by SigProfilerMatrixGenerator
     matrixGeneratorSamples(
-        betaBinomFilter.out.toList(),
+        betaBinomFilter.out.vcf_filtered.toList(),
         mut_type,
         sigprofiler_genome
         )

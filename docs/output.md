@@ -43,8 +43,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - `*_snp_vaf.tsv`: VAF for all samples
     - `germline_ids.txt`: germline variants (this file is only generated if `with_match_normal==false`)
     - `somatic_ids.txt`: somatic variants (this file is only generated if `with_match_normal==false`)
-    - `NR_bbinom_filtered.txt`: NR file (reads supporting variants) for all samples
-    - `NV_bbinom_filtered.txt`: NV file (number of reads at variants) for all samples
+    - `NR_bbinom_filtered.txt`: NR file (number of reads at variants) for all samples
+    - `NV_bbinom_filtered.txt`: NV file (reads supporting variants) for all samples
     - `somatic_artefacts_filtered.bed`: loci that pass the germline exact test (if applicable) and the betabinomial test
     - `somatic_ids_rho.txt`: rho value for all variants and whether the variants are filtered out by the betabinomial test
     - `genotype_bin.txt`: binary genotype file for all variants (used for the downstream phylogenetic subworkflow)
@@ -71,8 +71,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - `*_indel_vaf.tsv`: VAF for all samples
     - `germline_ids.txt`: germline variants (this file is only generated if `with_match_normal==false`)
     - `somatic_ids.txt`: somatic variants (this file is only generated if `with_match_normal==false`)
-    - `NR_bbinom_filtered.txt`: NR file (reads supporting variants) for all samples
-    - `NV_bbinom_filtered.txt`: NV file (number of reads at variants) for all samples
+    - `NR_bbinom_filtered.txt`: NR file (number of reads at variants) for all samples
+    - `NV_bbinom_filtered.txt`: NV file (reads supporting variants) for all samples
     - `somatic_artefacts_filtered.bed`: loci that pass the germline exact test (if applicable) and the betabinomial test
     - `somatic_ids_rho.txt`: rho value for all variants and whether the variants are filtered out by the betabinomial test
     - `genotype_bin.txt`: binary genotype file for all variants (used for the downstream phylogenetic subworkflow)

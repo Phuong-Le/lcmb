@@ -8,6 +8,7 @@ process hairpinAnnotation {
     tuple val(meta), path(bam), path(bai), path(bas), path(met), path(bam_match), path(bai_match), path(vcf), path(vcf_tbi)
     val mut_type
     path hairpin2_input_json
+    path hairpin2_name_mapping
 
     output:
     tuple val(meta), path(vcf_annot_gz), emit: vcf_annot_gz
@@ -18,7 +19,7 @@ process hairpinAnnotation {
     vcf_annot_gz = "${vcf.getName().tokenize(".").init().init().join(".")}.hairpin.vcf.gz"
     vcf_annot_tbi = "${vcf.getName().tokenize(".").init().init().join(".")}.hairpin.vcf.gz.tbi"
     """
-    hairpin2 -i ${vcf} -o ${vcf_annot} -a ${bam} -f b -ji ${hairpin2_input_json}
+    hairpin2 --config ${hairpin2_input_json} --name-mapping ${hairpin2_name_mapping} ${vcf} ${bam} > ${vcf_annot}
     tabix_index.py --infile ${vcf_annot} --output_gz_path ${vcf_annot_gz} --preset vcf
     """
 }

@@ -55,7 +55,7 @@ workflow CONPAIR_FILTER_WITH_MATCH_NORMAL {
         .combine(conpairPileupMatch.out)
         .map { sample -> tuple(sample[1], sample[2], sample[3], sample[5]) },
         marker_txt)
-        .collectFile( name: 'conpair_out/concordance.txt', newLine: true )
+        .collectFile( name: 'concordance.txt', newLine: true, storeDir: "${params.outdir}/conpair_out" )
 
     // Contamination
     contamination_all = conpairContamination(
@@ -63,7 +63,7 @@ workflow CONPAIR_FILTER_WITH_MATCH_NORMAL {
         .cross(conpairPileupSample.out)
         .map { sample -> tuple(sample[0][0], sample[0][2], sample[1][1], sample[1][2]) },
         marker_txt)
-        .collectFile( name: 'conpair_out/contamination.txt', newLine: true )
+        .collectFile( name: 'contamination.txt', newLine: true, storeDir: "${params.outdir}/conpair_out" )
 
     // Filtering contamination based on concordance and contamination
     conpairFilter(

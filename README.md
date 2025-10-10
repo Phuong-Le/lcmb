@@ -62,7 +62,7 @@ There are two main options, each with five possible subworkflows. These workflow
 
 4. [PHYLOGENETICS](subworkflows/local/phylogenetics/main.nf) for SNVs, run when `run_phylogenetics true` (default) and `--run_filter_snv true`, or `--run_phylogenetics true --run_filter_snv false --run_filter_indel false` and `--with_topology false`, or `--run_phylogenetics true --run_filter_snv false --run_filter_indel false` and `--snv_then_indel true`. Note that if `run_phylogenetics true` and `--run_filter_snv false --run_filter_indel false`, `--run_conpair` cannot be true, and `with_topology` must be true or `snv_then_indel` cannot be null but `with_topology` and `snv_then_indel` must not both be true. (details in [docs/usage.md](docs/usage.md))
 
-- For each donor pd_id, use NR (reads supporting variant), NV (total depths) and the binary genotype file (outputs from LCMB_FILTER_SNV_MATCH, otherwise should specified in the sample sheet) to create a fasta file of aligned sequences, where each sequence represents a sample of a donor.
+- For each donor pd_id, use NR (total depths), NV (reads supporting variant) and the binary genotype file (outputs from LCMB_FILTER_SNV_MATCH, otherwise should specified in the sample sheet) to create a fasta file of aligned sequences, where each sequence represents a sample of a donor.
 - From the fasta file representing each donor, create a phylogenetic tree using [MPBoot](https://bmcecolevol.biomedcentral.com/articles/10.1186/s12862-018-1131-3).
 - Assign mutations to each branch of the tree using [treemut](https://github.com/NickWilliamsSanger/treemut)
 - For each donor, generate a mutation matrix for the branches using [SigProfilerMatrixGenerator](https://github.com/AlexandrovLab/SigProfilerMatrixGenerator)
@@ -70,7 +70,7 @@ There are two main options, each with five possible subworkflows. These workflow
 
 5. [PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY](subworkflows/local/phylogenetics_provided_topology/main.nf) for Indels, run when `--phylogenetics == true` (default) and `--run_filter_indel true`, or `--run_phylogenetics true --run_filter_snv false --run_filter_indel false` and `--with_topology true`, or `--run_phylogenetics true --run_filter_snv false --run_filter_indel false` and `--snv_then_indel true`. Note that if `run_phylogenetics true` and `--run_filter_snv false --run_filter_indel false`, `--run_conpair` cannot be true, and `with_topology` must be true or `snv_then_indel` cannot be null but `with_topology` and `snv_then_indel` must not both be true. (details in [docs/usage.md](docs/usage.md))
 
-- For each donor pd_id, use NR (reads supporting variant), NV (total depths), the binary genotype file (outputs from FILTER_WITH_MATCH_NORMAL_INDEL) and a tree topology (output from PHYLOGENETICS). If FILTER_WITH_MATCH_NORMAL_INDEL and PHYLOGENETICS are not run, these files should specified in the sample sheet.
+- For each donor pd_id, use NR (total depths), NV (reads supporting variant), the binary genotype file (outputs from FILTER_WITH_MATCH_NORMAL_INDEL) and a tree topology (output from PHYLOGENETICS). If FILTER_WITH_MATCH_NORMAL_INDEL and PHYLOGENETICS are not run, these files should specified in the sample sheet.
 - Assign mutations to each branch of the tree (output from PHYLOGENETICS for SNVs or provided in sample sheet)
 - For each donor, generate a mutation matrix for the branches using [SigProfilerMatrixGenerator](https://github.com/AlexandrovLab/SigProfilerMatrixGenerator)
 - Plot the mutation matrices using [SigProfilerPlotting](https://github.com/AlexandrovLab/SigProfilerPlotting/tree/master)
@@ -109,7 +109,7 @@ All filtered out samples will be recorded in a log file.
 
 4. [PHYLOGENETICS](subworkflows/local/phylogenetics/main.nf) for SNVs, run when `run_phylogenetics true` (default) and `--run_filter_snv true`, or `--run_phylogenetics true --run_filter_snv false --run_filter_indel false` and `--with_topology false`, or `--run_phylogenetics true --run_filter_snv false --run_filter_indel false` and `--snv_then_indel true`. Note that if `run_phylogenetics true` and `--run_filter_snv false --run_filter_indel false`, `--run_conpair` cannot be true, and `with_topology` must be true or `snv_then_indel` cannot be null but `with_topology` and `snv_then_indel` must not both be true. (details in [docs/usage.md](docs/usage.md))
 
-- For each donor pd_id, use NR (reads supporting variant), NV (total depths) and the binary genotype file (outputs from LCMB_FILTER_SNV_MATCH, otherwise should specified in the sample sheet) to create a fasta file of aligned sequences, where each sequence represents a sample of a donor.
+- For each donor pd_id, use NR (total depths), NV (reads supporting variant) and the binary genotype file (outputs from LCMB_FILTER_SNV_MATCH, otherwise should specified in the sample sheet) to create a fasta file of aligned sequences, where each sequence represents a sample of a donor.
 - From the fasta file representing each donor, create a phylogenetic tree using [MPBoot](https://bmcecolevol.biomedcentral.com/articles/10.1186/s12862-018-1131-3).
 - Assign mutations to each branch of the tree using [treemut](https://github.com/NickWilliamsSanger/treemut)
 - For each donor, generate a mutation matrix for the branches using [SigProfilerMatrixGenerator](https://github.com/AlexandrovLab/SigProfilerMatrixGenerator)
@@ -117,7 +117,7 @@ All filtered out samples will be recorded in a log file.
 
 5. [PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY](subworkflows/local/phylogenetics_provided_topology/main.nf) for Indels, run when `--phylogenetics == true` (default) and `--run_filter_indel true`, or `--run_phylogenetics true --run_filter_snv false --run_filter_indel false` and `--with_topology true`, or `--run_phylogenetics true --run_filter_snv false --run_filter_indel false` and `--snv_then_indel true`. Note that if `run_phylogenetics true` and `--run_filter_snv false --run_filter_indel false`, `--run_conpair` cannot be true, and `with_topology` must be true or `snv_then_indel` cannot be null but `with_topology` and `snv_then_indel` must not both be true. (details in [docs/usage.md](docs/usage.md))
 
-- For each donor pd_id, use NR (reads supporting variant), NV (total depths), the binary genotype file (outputs from FILTER_WITH_MATCH_NORMAL_INDEL) and a tree topology (output from PHYLOGENETICS). If FILTER_WITH_MATCH_NORMAL_INDEL and PHYLOGENETICS are not run, these files should specified in the sample sheet.
+- For each donor pd_id, use NR (total depths), NV (reads supporting variant), the binary genotype file (outputs from FILTER_WITH_MATCH_NORMAL_INDEL) and a tree topology (output from PHYLOGENETICS). If FILTER_WITH_MATCH_NORMAL_INDEL and PHYLOGENETICS are not run, these files should specified in the sample sheet.
 - Assign mutations to each branch of the tree (output from PHYLOGENETICS for SNVs or provided in sample sheet)
 - For each donor, generate a mutation matrix for the branches using [SigProfilerMatrixGenerator](https://github.com/AlexandrovLab/SigProfilerMatrixGenerator)
 - Plot the mutation matrices using [SigProfilerPlotting](https://github.com/AlexandrovLab/SigProfilerPlotting/tree/master)
@@ -175,15 +175,15 @@ The input sample sheet should be in a tab delimited format (extension must be .t
 | `indel_vcf` | VCF file for the indels of `sample_id`, must exist |
 | `indel_vcf_tbi` | tabix index file for VCF file for `indel_vcf_tbi`, must exist |
 | REQUIRED COLUMNS FOR PHYLOGENETICS FOR BOTH SNVs AND INDELs WITHOUT FILTERING SNVs OR INDELs (`--run_phylogenetics true --run_filter_snv false --run_filter_indel false --snv_then_indel true`)  |
-| `nr_path_snv` | NR file (reads supporting variants) for SNVs for `pdid`, must exist |
-| `nv_path_snv` | NV file (depths at the variant locus) for SNVs for `pdid`, must exist |
+| `nr_path_snv` | NR file (depths at variants) for SNVs for `pdid`, must exist |
+| `nv_path_snv` | NV file (reads supporting variants) for SNVs for `pdid`, must exist |
 | `genotype_bin_path_snv` | binary genotype file for SNVs for `pdid`, must exist |
-| `nr_path_indel` | NR file (reads supporting variants) for INDELs for `pdid`, must exist |
-| `nv_path_indel` | NV file (depths at the variant locus) for INDELs for `pdid`, must exist |
+| `nr_path_indel` | NR file (depths at variants) for INDELs for `pdid`, must exist |
+| `nv_path_indel` | NV file (reads supporting variants) for INDELs for `pdid`, must exist |
 | `genotype_bin_path_indel` | binary genotype file for INDELs for `pdid`, must exist |
 | REQUIRED COLUMNS FOR PHYLOGENETICS or PHYLOGENETICS-GIVEN-TREE-TOPOLOGY WITHOUT RUNNNING FILTERING SNVs OR INDELs (`--run_phylogenetics true --run_filter_snv false --run_filter_indel false --snv_then_indel [false/null]`)  |
-| `nr_path` | NR file (reads supporting variants) for `pdid`, must exist |
-| `nv_path` | NV file (depths at the variant locus) for `pdid`, must exist |
+| `nr_path` | NR file (depths at variants) for `pdid`, must exist |
+| `nv_path` | NV file (reads supporting variants) for `pdid`, must exist |
 | `genotype_bin_path` | binary genotype file for `pdid`, must exist |
 | REQUIRED COLUMNS FOR PHYLOGENETICS-GIVEN-TREE-TOPOLOGY WITHOUT RUNNNING FILTERING SNVs (`--run_phylogenetics true --run_filter_snv false --run_filter_indel true`, or `--run_phylogenetics true --run_filter_snv false --run_filter_indel false --with_topology true`)  |
 | `topology` | tree topology file for `pdid`, must exist |
@@ -234,12 +234,12 @@ module load ISG/singularity/3.11.4
 outdir=/path/to/outdir
 mkdir -p $outdir
 script=/path/to/lcmb/main.nf # should be part of this pipeline
-config_file=/path/to/lcmb/sanger_lsf.config # should be part of this pipeline
+config_file=/path/to/lcmb/conf/sanger_lsf.config # should be part of this pipeline
 samplesheet=/path/to/samplesheet.tsv # or .csv, format should be consistent with extension
 
 species=Human # please refer to docs/usage.md
 species_assembly=GRCh38 # please refer to docs/usage.md
-custom_genome_base=/lustre/scratch124/casm/team78pipelines/canpipe/live/ref/Homo_sapiens # please let me know if you're using a different genome so I can update the config for you
+custom_genome_base=/lustre/scratch124/casm/references/pipeline_ref/Homo_sapiens # please let me know if you're using a different genome so I can update the config for you
 genome=GRCh38_full_analysis_set_plus_decoy_hla # same as above
 sigprofiler_genome=GRCh38
 
@@ -250,7 +250,7 @@ run_filter_indel=true
 run_phylogenetics=false
 
 bsub -cwd ${working_dir} -q week -o %J.out -e %J.err -R "select[mem>5000] rusage[mem=5000]" -M5000 -env "all" \
-    "nextflow run $script -c ${config_file} --input $input --outdir $outdir --run_conpair ${run_conpair} --run_filter_snv ${run_filter_snv} --run_filter_indel ${run_filter_indel} --run_phylogenetics ${run_phylogenetics}  --use_custom_genome true --custom_genome_base $custom_genome_base --genome ${genome} --hairpin2_input_json ${hairpin2_input_json} --sigprofiler_genome ${sigprofiler_genome} --with_match_normal ${with_match_normal} -profile singularity -resume"
+    "nextflow run $script -c ${config_file} --input ${samplesheet} --outdir $outdir --run_conpair ${run_conpair} --run_filter_snv ${run_filter_snv} --run_filter_indel ${run_filter_indel} --run_phylogenetics ${run_phylogenetics}  --use_custom_genome true --custom_genome_base $custom_genome_base --genome ${genome}  --sigprofiler_genome ${sigprofiler_genome} --with_match_normal ${with_match_normal} -profile singularity -resume"
 ```
 
 ## Pipeline output

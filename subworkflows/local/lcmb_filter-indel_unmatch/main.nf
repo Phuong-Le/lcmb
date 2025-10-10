@@ -109,7 +109,7 @@ workflow LCMB_FILTER_INDEL_UNMATCH {
 
     // generate mutation matrix for the samples by SigProfilerMatrixGenerator
     matrixGeneratorSamples(
-        betaBinomFilter.out.toList(),
+        betaBinomFilter.out.vcf_filtered.toList(),
         mut_type,
         sigprofiler_genome
         )
