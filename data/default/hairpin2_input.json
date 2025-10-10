@@ -19,7 +19,7 @@
     "nsamples_threshold": 0
 },
 "ALF": {
-    "avg_AS_threshold": 0.87
+    "avg_AS_threshold": 0.93
 },
 "ADF": {
     "edge_definition": 0.15,
