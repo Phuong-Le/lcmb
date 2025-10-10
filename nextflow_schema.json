@@ -113,6 +113,22 @@
                     "type": "number",
                     "description": "rho threshold below which variant is filtered out",
                     "default": 0.1
+                },
+                "hairpin2_input_json": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
+                    "description": "Path to hairpin2 input json file, default to data/default/hairpin2_input.json",
+                    "fa_icon": "far fa-file-code"
+                },
+                "hairpin2_name_mapping": {
+                    "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
+                    "description": "Path to hairpin2 name mapping json file, default to data/default/hairpin2_name_mapping.json",
+                    "fa_icon": "far fa-file-code"
                 }
             }
         },

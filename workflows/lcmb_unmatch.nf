@@ -45,7 +45,8 @@ workflow LCMB_UNMATCH {
     indel_rho_threshold
     high_depth_regions
     high_depth_regions_tbi
-    hairpin_genome
+    hairpin2_input_json
+    hairpin2_name_mapping
     sigprofiler_genome
     snv_then_indel
     provided_topology
@@ -78,7 +79,8 @@ workflow LCMB_UNMATCH {
                 .map { row -> tuple( ['sample_id': row.sample_id, 'match_normal_id': row.match_normal_id, 'pdid' : row.pdid], row.bam, row.bai, row.bas, row.met, row.bam_match, row.bai_match, row.snv_vcf, row.snv_vcf_tbi ) },
                 snv_vcfilter_config,
                 snv_rho_threshold,
-                hairpin_genome,
+                hairpin2_input_json,
+                hairpin2_name_mapping,
                 fasta,
                 fai,
                 high_depth_regions,
@@ -91,7 +93,8 @@ workflow LCMB_UNMATCH {
                 ch_samplesheet_filter_snv,
                 snv_vcfilter_config,
                 snv_rho_threshold,
-                hairpin_genome,
+                hairpin2_input_json,
+                hairpin2_name_mapping,
                 fasta,
                 fai,
                 high_depth_regions,
