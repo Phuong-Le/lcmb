@@ -1,3 +1,4 @@
+include { hairpinAnnotation } from "$projectDir/modules/local/hairpin_annotation"
 include { lcmbVcfilter } from "$projectDir/modules/local/lcmb_vcfilter"
 include { getChromCgpVaf } from "$projectDir/modules/local/get_chrom_cgpvaf"
 include { cgpVafChrom } from "$projectDir/modules/local/cgpvaf_chrom"
@@ -14,6 +15,8 @@ workflow LCMB_FILTER_INDEL_MATCH {
     input
     vcfilter_config
     rho_threshold
+    hairpin2_input_json
+    hairpin2_name_mapping
     fasta
     fai
     high_depth_regions
@@ -30,13 +33,17 @@ workflow LCMB_FILTER_INDEL_MATCH {
             tuple(meta, bam, bai, bas, met, bam_match, bai_match)
         }
 
+    // Hairpin annotations
+    hairpinAnnotation(
+        input,
+        mut_type,
+        hairpin2_input_json,
+        hairpin2_name_mapping
+        )
+
     // LCMB vcfilter
     lcmbVcfilter(
-        input.
-        map {
-            meta, bam, bai, bas, met, bam_match, bai_match, vcf, vcf_tbi ->
-            tuple(meta, vcf)
-        },
+        hairpinAnnotation.out.vcf_annot_gz,
         vcfilter_config,
         mut_type
     )

@@ -45,8 +45,10 @@ workflow LCMB_MATCH {
     indel_rho_threshold
     high_depth_regions
     high_depth_regions_tbi
-    hairpin2_input_json
-    hairpin2_name_mapping
+    hairpin2_input_snv_json
+    hairpin2_name_mapping_snv
+    hairpin2_input_indel_json
+    hairpin2_name_mapping_indel
     sigprofiler_genome
     snv_then_indel
     provided_topology
@@ -94,8 +96,8 @@ workflow LCMB_MATCH {
                 .map { row -> tuple( ['sample_id': row.sample_id, 'match_normal_id': row.match_normal_id, 'pdid' : row.pdid], row.bam, row.bai, row.bas, row.met, row.bam_match, row.bai_match, row.snv_vcf, row.snv_vcf_tbi ) },
                 snv_vcfilter_config,
                 snv_rho_threshold,
-                hairpin2_input_json,
-                hairpin2_name_mapping,
+                hairpin2_input_snv_json,
+                hairpin2_name_mapping_snv,
                 fasta,
                 fai,
                 high_depth_regions,
@@ -110,8 +112,8 @@ workflow LCMB_MATCH {
                 ch_samplesheet_filter_snv,
                 snv_vcfilter_config,
                 snv_rho_threshold,
-                hairpin2_input_json,
-                hairpin2_name_mapping,
+                hairpin2_input_snv_json,
+                hairpin2_name_mapping_snv,
                 fasta,
                 fai,
                 high_depth_regions,
@@ -146,6 +148,8 @@ workflow LCMB_MATCH {
                 .map { row -> tuple( ['sample_id': row.sample_id, 'match_normal_id': row.match_normal_id, 'pdid' : row.pdid], row.bam, row.bai, row.bas, row.met, row.bam_match, row.bai_match, row.indel_vcf, row.indel_vcf_tbi ) },
                 indel_vcfilter_config,
                 indel_rho_threshold,
+                hairpin2_input_indel_json,
+                hairpin2_name_mapping_indel,
                 fasta,
                 fai,
                 high_depth_regions,
@@ -158,6 +162,8 @@ workflow LCMB_MATCH {
                 ch_samplesheet_filter_indel,
                 indel_vcfilter_config,
                 indel_rho_threshold,
+                hairpin2_input_indel_json,
+                hairpin2_name_mapping_indel,
                 fasta,
                 fai,
                 high_depth_regions,

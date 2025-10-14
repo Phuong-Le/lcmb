@@ -76,8 +76,10 @@ workflow NFCORE_LCMB {
     indel_rho_threshold
     high_depth_regions
     high_depth_regions_tbi
-    hairpin2_input_json
-    hairpin2_name_mapping
+    hairpin2_input_snv_json
+    hairpin2_name_mapping_snv
+    hairpin2_input_indel_json
+    hairpin2_name_mapping_indel
     sigprofiler_genome
     snv_then_indel
     provided_topology
@@ -116,8 +118,10 @@ workflow NFCORE_LCMB {
         indel_rho_threshold,
         high_depth_regions,
         high_depth_regions_tbi,
-        hairpin2_input_json,
-        hairpin2_name_mapping,
+        hairpin2_input_snv_json,
+        hairpin2_name_mapping_snv,
+        hairpin2_input_indel_json,
+        hairpin2_name_mapping_indel,
         sigprofiler_genome,
         snv_then_indel,
         provided_topology,
@@ -221,8 +225,10 @@ workflow {
         params.indel_rho_threshold,
         params.high_depth_regions,
         params.high_depth_regions_tbi,
-        params.hairpin2_input_json,
-        params.hairpin2_name_mapping,
+        params.hairpin2_input_snv_json,
+        params.hairpin2_name_mapping_snv,
+        params.hairpin2_input_indel_json,
+        params.hairpin2_name_mapping_indel,
         params.sigprofiler_genome,
         params.snv_then_indel,
         params.provided_topology,
