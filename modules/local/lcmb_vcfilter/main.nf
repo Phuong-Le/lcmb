@@ -17,7 +17,8 @@ process lcmbVcfilter {
     vcf_filtered_gz = "${vcf_filtered}.gz"
     vcf_filtered_tbi = "${vcf_filtered_gz}.tbi"
     """
-    vcfilter filter -o . -i ${vcfilter_config} ${vcf}
+    # vcfilter filter -o . -i ${vcfilter_config} ${vcf}
+    bcftools filter -i \$(cat ${vcfilter_config}) > ${vcf_filtered}  # inclusive filtering
     bgzip ${vcf_filtered}
     tabix ${vcf_filtered_gz}
     """
