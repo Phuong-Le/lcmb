@@ -101,7 +101,6 @@ workflow LCMB_UNMATCH {
                 high_depth_regions_tbi,
                 sigprofiler_genome
             )
-            // LCMB_FILTER_SNV_MATCH.out.view()
         }
     }
 

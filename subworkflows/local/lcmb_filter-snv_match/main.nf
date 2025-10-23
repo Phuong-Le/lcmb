@@ -7,7 +7,8 @@ include { betaBinomFilterIndex } from "$projectDir/modules/local/betabinom_filte
 include { betaBinomFilter } from "$projectDir/modules/local/betabinom_filter"
 include { matrixGeneratorSamples } from "$projectDir/modules/local/matrix_generator_samples"
 include { spectraPlottingSamples } from "$projectDir/modules/local/spectra_plotting_samples"
-
+include { clonalityTest } from "$projectDir/modules/local/clonality_test"
+include { concatClonality } from "$projectDir/modules/local/concat_clonality"
 
 workflow LCMB_FILTER_SNV_MATCH {
     take:
@@ -115,7 +116,9 @@ workflow LCMB_FILTER_SNV_MATCH {
 
     // generate mutation matrix for the samples by SigProfilerMatrixGenerator
     matrixGeneratorSamples(
-        betaBinomFilter.out.vcf_filtered.toList(),
+        betaBinomFilter.out.vcf_filtered
+        .map { pdid, sample_id, vcf_filtered -> vcf_filtered }
+        .toList(),
         mut_type,
         sigprofiler_genome
         )
@@ -126,10 +129,36 @@ workflow LCMB_FILTER_SNV_MATCH {
         mut_type
         )
 
-    // betaBinomFilterIndex.out.betabinom_bed.view()
+
+    // clonality test
+    clonalityTest(
+        betaBinomFilter.out.vcf_filtered
+        .combine(
+            betaBinomFilterIndex.out.phylogenetic_raw_input,
+            by: 0
+        ),
+        3,      // min_good_reads
+        3,      // max_K
+        5,   // max_iter
+        4,      // nchains
+        0.25,    // clonal_threshold
+        0.9,     // proportion_pass_clonality
+        mut_type
+    )
+
+    clonality_ch = clonalityTest.out.clonality
+    .groupTuple( by: 0 )
+
+    concatClonality(
+        betaBinomFilterIndex.out.phylogenetic_raw_input
+        .combine( clonality_ch, by: 0 ),
+        mut_type
+    )
+
 
     emit:
-    betaBinomFilterIndex.out.phylogenetics_input
+    betaBinomFilterIndex.out.phylogenetic_raw_input
+        .combine( concatClonality.out, by: 0 )
 
 }
 

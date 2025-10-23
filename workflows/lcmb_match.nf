@@ -186,10 +186,22 @@ workflow LCMB_MATCH {
             )
             if ( run_filter_indel == true ) {
                 // only run this if there are more than 2 sample per donor (genotype_bin only has one column)
+
+                topology_ch = PHYLOGENETICS.out
+                    .filter { it != null }
+                // get clonality from SNV filtering
+                clonality_ch = LCMB_FILTER_SNV_MATCH.out
+                    .filter { it[3].readLines().first().split(' ').size() > 2 }
+                    .map { pdid, nr_path, nv_path, genotype_bin_path, clonality ->
+                        tuple(pdid, clonality)
+                    }
                 // phylogenetics provided tree topology
                 PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY(
-                    PHYLOGENETICS.out
-                    .filter { it != null }
+                    topology_ch
+                    .combine(
+                        clonality_ch,
+                        by: 0
+                    )
                     .combine(
                         LCMB_FILTER_INDEL_MATCH.out
                         .filter { it[3].readLines().first().split(' ').size() > 2 },

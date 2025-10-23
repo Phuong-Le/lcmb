@@ -15,7 +15,7 @@ process betaBinomFilterIndex {
     path "germline_ids.txt", optional: true, emit: germline_ids
     path "somatic_ids.txt", optional: true, emit: somatic_ids
     path "somatic_ids_rho.txt", optional: true, emit: somatic_ids_rho
-    tuple val(pdid), path("NR_bbinom_filtered.txt"), path("NV_bbinom_filtered.txt"), path("genotype_bin.txt"), optional: true, emit: phylogenetics_input
+    tuple val(pdid), path("NR_bbinom_filtered.txt"), path("NV_bbinom_filtered.txt"), path("genotype_bin.txt"), optional: true, emit: phylogenetic_raw_input
 
     script:
     """

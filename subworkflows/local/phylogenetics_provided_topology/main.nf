@@ -1,3 +1,4 @@
+include { rmPolyclonal } from "$projectDir/modules/local/rm_polyclonal"
 include { mutToTree } from "$projectDir/modules/local/mut_to_tree"
 include { matrixGeneratorBranches } from "$projectDir/modules/local/matrix_generator_branches"
 include { concatMatrices } from "$projectDir/modules/local/concat_matrices"
@@ -11,9 +12,26 @@ workflow PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY {
     sigprofiler_genome
 
     main:
+    topology = phylogenetics_provided_topology_input_ch
+    .map { pdid, topology_file, clonality, nr_path, nv_path, genotype_bin_path ->
+        tuple(pdid, topology_file)
+    }
+
+    phylogenetic_input_ch = phylogenetics_provided_topology_input_ch
+    .map { pdid, topology_file, clonality, nr_path, nv_path, genotype_bin_path ->
+        tuple(pdid, nr_path, nv_path, genotype_bin_path, clonality)
+    }
+
+    // remove polyclonal samples
+    rmPolyclonal(
+        phylogenetic_input_ch,
+        outdir_basename
+    )
+
     // assign mutation to provided topology
     mutToTree(
-        phylogenetics_provided_topology_input_ch,
+        rmPolyclonal.out.phylogenetic_input
+        .combine( topology, by: 0 ),
         outdir_basename
     )
 

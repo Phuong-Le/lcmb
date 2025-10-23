@@ -21,7 +21,7 @@ def genotype_bin_to_fasta(genotype_bin_path, outfile):
         for sample in genotype_bin.columns:
             seq = ''.join(list(map(genotype_bin_to_seq, genotype_bin[sample], ref, alt)))
             fasta.write(f'>{sample}\n{seq}\n')
-            
+
 
 def get_arguments():
     parser = argparse.ArgumentParser(description='Binary genotype to fasta')
