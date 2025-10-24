@@ -233,6 +233,7 @@ module load ISG/singularity/3.11.4
 
 outdir=/path/to/outdir
 mkdir -p $outdir
+working_dir=$outdir
 script=/path/to/lcmb/main.nf # should be part of this pipeline
 config_file=/path/to/lcmb/conf/sanger_lsf.config # should be part of this pipeline
 samplesheet=/path/to/samplesheet.tsv # or .csv, format should be consistent with extension

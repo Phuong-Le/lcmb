@@ -74,6 +74,7 @@ workflow PIPELINE_INITIALISATION {
     ch_samplesheet_phylogenetics = null
     ch_samplesheet_snv_then_indel = null
     ch_samplesheet_topology = null
+    ch_samplesheet_clonality = null
 
     if ( run_conpair == true ) {
         if ( run_filter_snv == true ) {
