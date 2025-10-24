@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/sangersomatic/master/assets/schema_input.json",
-    "title": "nf-core/sangersomatic pipeline - params.input schema",
+    "title": "sangersomatic pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
     "type": "array",
     "items": {

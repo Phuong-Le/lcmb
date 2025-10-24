@@ -61,6 +61,7 @@ workflow NFCORE_LCMB {
     samplesheet_phylogenetics
     samplesheet_snv_then_indel
     samplesheet_topology
+    samplesheet_clonality
     input
     fasta
     fai
@@ -103,6 +104,7 @@ workflow NFCORE_LCMB {
         samplesheet_phylogenetics,
         samplesheet_snv_then_indel,
         samplesheet_topology,
+        samplesheet_clonality,
         input,
         fasta,
         fai,
@@ -140,6 +142,7 @@ workflow NFCORE_LCMB {
         samplesheet_phylogenetics,
         samplesheet_snv_then_indel,
         samplesheet_topology,
+        samplesheet_clonality,
         input,
         fasta,
         fai,
@@ -210,6 +213,7 @@ workflow {
         PIPELINE_INITIALISATION.out.samplesheet_phylogenetics,
         PIPELINE_INITIALISATION.out.samplesheet_snv_then_indel,
         PIPELINE_INITIALISATION.out.samplesheet_topology,
+        PIPELINE_INITIALISATION.out.samplesheet_clonality,
         params.input,
         params.fasta,
         params.fai,

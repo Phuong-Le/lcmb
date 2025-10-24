@@ -30,6 +30,7 @@ workflow LCMB_MATCH {
     ch_samplesheet_phylogenetics
     ch_samplesheet_snv_then_indel
     ch_samplesheet_topology
+    ch_samplesheet_clonality
     input
     fasta
     fai
@@ -215,12 +216,25 @@ workflow LCMB_MATCH {
         else if ( run_filter_indel == true ) {
             // only run this if there are more than 2 sample per donor (genotype_bin only has one column)
             // phylogenetics provided tree topology
-            PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY(
-                ch_samplesheet_topology
+            topology_ch = ch_samplesheet_topology
                 .map {
                     meta, topology -> tuple(meta.pdid, topology)
                 }
+                .filter { it != null }
                 .unique()
+            clonality_ch = ch_samplesheet_clonality
+                .map {
+                    meta, clonality -> tuple(meta.pdid, clonality)
+                }
+                .filter { it != null }
+                .unique()
+
+            PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY(
+                topology_ch
+                .combine(
+                    clonality_ch,
+                    by: 0
+                )
                 .combine(
                     LCMB_FILTER_INDEL_MATCH.out
                     .filter { it[3].readLines().first().split(' ').size() > 2 },
@@ -239,6 +253,7 @@ workflow LCMB_MATCH {
             else {
                 assert provided_topology != null
             }
+
             // pipeline selection
             if ( snv_then_indel == true ) {
                 // phylogenetics for SNV

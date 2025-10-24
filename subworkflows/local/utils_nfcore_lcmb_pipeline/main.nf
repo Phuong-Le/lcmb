@@ -207,18 +207,25 @@ workflow PIPELINE_INITIALISATION {
             )
         }
 
-        // get samplesheet plus topology if applicable
+        // get samplesheet plus topology and clonality if applicable
         Channel
             .fromList(samplesheetToList(
                 input,
                 "${projectDir}/assets/schemas/schema_input_conpair_filter-indel.json"))
             .set { ch_samplesheet_filter_indel }
         if ( run_phylogenetics == true ) {
+            // topology
             Channel
             .fromList(samplesheetToList(
                 input,
                 "${projectDir}/assets/schemas/schema_input_topology.json"))
             .set { ch_samplesheet_topology }
+            // clonality
+            Channel
+            .fromList(samplesheetToList(
+                input,
+                "${projectDir}/assets/schemas/schema_input_clonality.json"))
+            .set { ch_samplesheet_clonality }
         }
     }
     else if ( run_phylogenetics == true ) {
@@ -229,6 +236,12 @@ workflow PIPELINE_INITIALISATION {
             "${projectDir}/assets/schemas/nextflow_schema_phylogenetics.json"
             )
         // get samplesheet
+        // clonality
+            Channel
+            .fromList(samplesheetToList(
+                input,
+                "${projectDir}/assets/schemas/schema_input_clonality.json"))
+            .set { ch_samplesheet_clonality }
         if ( snv_then_indel == true ) {
             Channel
             .fromList(samplesheetToList(
@@ -261,6 +274,7 @@ workflow PIPELINE_INITIALISATION {
     samplesheet_phylogenetics = ch_samplesheet_phylogenetics
     samplesheet_snv_then_indel = ch_samplesheet_snv_then_indel
     samplesheet_topology = ch_samplesheet_topology
+    samplesheet_clonality = ch_samplesheet_clonality
     versions    = ch_versions
 }
 
