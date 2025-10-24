@@ -82,6 +82,12 @@ workflow NFCORE_LCMB {
     hairpin2_input_indel_json
     hairpin2_name_mapping_indel
     sigprofiler_genome
+    min_good_reads
+    max_K
+    max_iter
+    nchains
+    clonal_threshold
+    proportion_pass_clonality
     snv_then_indel
     provided_topology
     phylogenetics_outdir_basename
@@ -125,6 +131,12 @@ workflow NFCORE_LCMB {
         hairpin2_input_indel_json,
         hairpin2_name_mapping_indel,
         sigprofiler_genome,
+        min_good_reads,
+        max_K,
+        max_iter,
+        nchains,
+        clonal_threshold,
+        proportion_pass_clonality,
         snv_then_indel,
         provided_topology,
         phylogenetics_outdir_basename
@@ -234,6 +246,12 @@ workflow {
         params.hairpin2_input_indel_json,
         params.hairpin2_name_mapping_indel,
         params.sigprofiler_genome,
+        params.min_good_reads,
+        params.max_K,
+        params.max_iter,
+        params.nchains,
+        params.clonal_threshold,
+        params.proportion_pass_clonality,
         params.snv_then_indel,
         params.provided_topology,
         params.phylogenetics_outdir_basename

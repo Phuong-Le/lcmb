@@ -13,12 +13,12 @@ workflow PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY {
 
     main:
     topology = phylogenetics_provided_topology_input_ch
-    .map { pdid, topology_file, clonality, nr_path, nv_path, genotype_bin_path ->
+    .map { pdid, nr_path, nv_path, genotype_bin_path, clonality, topology_file ->
         tuple(pdid, topology_file)
     }
 
     phylogenetic_input_ch = phylogenetics_provided_topology_input_ch
-    .map { pdid, topology_file, clonality, nr_path, nv_path, genotype_bin_path ->
+    .map { pdid, nr_path, nv_path, genotype_bin_path, clonality, topology_file ->
         tuple(pdid, nr_path, nv_path, genotype_bin_path, clonality)
     }
 
@@ -31,7 +31,8 @@ workflow PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY {
     // assign mutation to provided topology
     mutToTree(
         rmPolyclonal.out.phylogenetic_input
-        .combine( topology, by: 0 ),
+        .combine( topology, by: 0 )
+        .filter { it -> it[3].readLines().first().split(' ').size() > 2 },
         outdir_basename
     )
 

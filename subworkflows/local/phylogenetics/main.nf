@@ -20,7 +20,8 @@ workflow PHYLOGENETICS { // phylogenetics workflow for SNVs
 
     //  get phylogeny
     getPhylogeny(
-        rmPolyclonal.out.phylogenetic_input,
+        rmPolyclonal.out.phylogenetic_input
+        .filter { it[3].readLines().first().split(' ').size() > 2 },
         outdir_basename
     )
 

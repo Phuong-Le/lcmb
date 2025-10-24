@@ -51,6 +51,12 @@ workflow LCMB_MATCH {
     hairpin2_input_indel_json
     hairpin2_name_mapping_indel
     sigprofiler_genome
+    min_good_reads
+    max_K
+    max_iter
+    nchains
+    clonal_threshold
+    proportion_pass_clonality
     snv_then_indel
     provided_topology
     phylogenetics_outdir_basename
@@ -103,7 +109,13 @@ workflow LCMB_MATCH {
                 fai,
                 high_depth_regions,
                 high_depth_regions_tbi,
-                sigprofiler_genome
+                sigprofiler_genome,
+                min_good_reads,
+                max_K,
+                max_iter,
+                nchains,
+                clonal_threshold,
+                proportion_pass_clonality
             )
 
 
@@ -119,7 +131,13 @@ workflow LCMB_MATCH {
                 fai,
                 high_depth_regions,
                 high_depth_regions_tbi,
-                sigprofiler_genome
+                sigprofiler_genome,
+                min_good_reads,
+                max_K,
+                max_iter,
+                nchains,
+                clonal_threshold,
+                proportion_pass_clonality,
             )
             // LCMB_FILTER_SNV_MATCH.out.view()
         }
@@ -196,18 +214,13 @@ workflow LCMB_MATCH {
                     .map { pdid, nr_path, nv_path, genotype_bin_path, clonality ->
                         tuple(pdid, clonality)
                     }
+
                 // phylogenetics provided tree topology
                 PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY(
-                    topology_ch
-                    .combine(
-                        clonality_ch,
-                        by: 0
-                    )
-                    .combine(
-                        LCMB_FILTER_INDEL_MATCH.out
-                        .filter { it[3].readLines().first().split(' ').size() > 2 },
-                        by: 0
-                    ),
+                    LCMB_FILTER_INDEL_MATCH.out
+                    .filter { it[3].readLines().first().split(' ').size() > 2 }
+                    .combine( clonality_ch, by: 0)
+                    .combine( topology_ch, by: 0 ),
                     'phylogenetics_indel_out',
                     sigprofiler_genome
                 )
@@ -230,16 +243,16 @@ workflow LCMB_MATCH {
                 .unique()
 
             PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY(
-                topology_ch
-                .combine(
-                    clonality_ch,
-                    by: 0
-                )
-                .combine(
-                    LCMB_FILTER_INDEL_MATCH.out
-                    .filter { it[3].readLines().first().split(' ').size() > 2 },
-                    by: 0
-                ),
+                LCMB_FILTER_INDEL_MATCH.out
+                    .filter { it[3].readLines().first().split(' ').size() > 2 }
+                    .combine(
+                        clonality_ch,
+                        by: 0
+                    )
+                    .combine(
+                        topology_ch,
+                        by: 0
+                    ),
                 'phylogenetics_indel_out',
                 sigprofiler_genome
             )
@@ -254,6 +267,12 @@ workflow LCMB_MATCH {
                 assert provided_topology != null
             }
 
+            clonality_ch = ch_samplesheet_clonality
+                .map {
+                    meta, clonality -> tuple(meta.pdid, clonality)
+                }
+                .filter { it != null }
+                .unique()
             // pipeline selection
             if ( snv_then_indel == true ) {
                 // phylogenetics for SNV
@@ -263,20 +282,21 @@ workflow LCMB_MATCH {
                         meta, nr_path_snv, nv_path_snv, genotype_bin_path_snv, nr_path_indel, nv_path_indel, genotype_bin_path_indel
                         -> tuple(meta.pdid, nr_path_snv, nv_path_snv, genotype_bin_path_snv)
                     }
+                    .filter { it[3].readLines().first().split(' ').size() > 2 }
+                    .combine( clonality_ch, by: 0 )
                     , 'phylogenetics_snp_out',
                     sigprofiler_genome
                 )
                 // phylogenetics for INDEL
                 PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY(
-                    PHYLOGENETICS.out
-                        .combine(
-                            ch_samplesheet_snv_then_indel
-                        .map {
+                    ch_samplesheet_snv_then_indel
+                    .map {
                             meta, nr_path_snv, nv_path_snv, genotype_bin_path_snv, nr_path_indel, nv_path_indel, genotype_bin_path_indel
                             -> tuple(meta.pdid, nr_path_indel, nv_path_indel, genotype_bin_path_indel)
-                        },
-                        by: 0
-                    ),
+                        }
+                    .filter { it[3].readLines().first().split(' ').size() > 2 }
+                    .combine( clonality_ch, by: 0 )
+                    .combine( PHYLOGENETICS.out, by: 0),
                     'phylogenetics_indel_out',
                     sigprofiler_genome
                 )
@@ -286,29 +306,31 @@ workflow LCMB_MATCH {
                 phylogenetics_outdir_basename = (phylogenetics_outdir_basename == null) ? 'phylogenetics_indel_out' : phylogenetics_outdir_basename
 
                 PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY(
-                ch_samplesheet_topology
-                .combine(ch_samplesheet_phylogenetics, by: 0)
-                .map {
-                    meta, topology, nr_path, nv_path, genotype_bin_path
-                    -> tuple(meta.pdid, topology, nr_path, nv_path, genotype_bin_path)
-                }
-                .filter { it[3].readLines().first().split(' ').size() > 2 },
-                'phylogenetics_indel_out',
-                sigprofiler_genome
+                    ch_samplesheet_phylogenetics
+                    .map {
+                        meta, nr_path, nv_path, genotype_bin_path
+                        -> tuple(meta.pdid, nr_path, nv_path, genotype_bin_path)
+                    }
+                    .filter { it[3].readLines().first().split(' ').size() > 2 }
+                    .combine( clonality_ch, by: 0 )
+                    .combine( ch_samplesheet_topology, by: 0 ),
+                    'phylogenetics_indel_out',
+                    sigprofiler_genome
                 )
             }
             else {
                 phylogenetics_outdir_basename = (phylogenetics_outdir_basename == null) ? 'phylogenetics_snp_out' : phylogenetics_outdir_basename
 
                 PHYLOGENETICS(
-                ch_samplesheet_phylogenetics
-                .map {
-                    meta, nr_path, nv_path, genotype_bin_path
-                    -> tuple(meta.pdid, nr_path, nv_path, genotype_bin_path)
-                }
-                .filter { it[3].readLines().first().split(' ').size() > 2 },
-                phylogenetics_outdir_basename,
-                sigprofiler_genome
+                    ch_samplesheet_phylogenetics
+                    .map {
+                        meta, nr_path, nv_path, genotype_bin_path
+                        -> tuple(meta.pdid, nr_path, nv_path, genotype_bin_path)
+                    }
+                    .filter { it[3].readLines().first().split(' ').size() > 2 }
+                    .combine( clonality_ch, by: 0 ),
+                    phylogenetics_outdir_basename,
+                    sigprofiler_genome
                 )
             }
         }

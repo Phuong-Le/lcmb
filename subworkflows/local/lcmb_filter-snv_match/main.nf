@@ -22,6 +22,12 @@ workflow LCMB_FILTER_SNV_MATCH {
     high_depth_regions
     high_depth_regions_tbi
     sigprofiler_genome
+    min_good_reads
+    max_K
+    max_iter
+    nchains
+    clonal_threshold
+    proportion_pass_clonality
 
     main:
 
@@ -137,12 +143,12 @@ workflow LCMB_FILTER_SNV_MATCH {
             betaBinomFilterIndex.out.phylogenetic_raw_input,
             by: 0
         ),
-        3,      // min_good_reads
-        3,      // max_K
-        5,   // max_iter
-        4,      // nchains
-        0.25,    // clonal_threshold
-        0.9,     // proportion_pass_clonality
+        min_good_reads,
+        max_K,
+        max_iter,
+        nchains,
+        clonal_threshold,
+        proportion_pass_clonality,
         mut_type
     )
 
