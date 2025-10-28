@@ -137,7 +137,7 @@ workflow LCMB_MATCH {
                 max_iter,
                 nchains,
                 clonal_threshold,
-                proportion_pass_clonality,
+                proportion_pass_clonality
             )
             // LCMB_FILTER_SNV_MATCH.out.view()
         }
@@ -259,13 +259,6 @@ workflow LCMB_MATCH {
         }
         else {
             // phylogenetics only
-            // checking inputs
-            if ( snv_then_indel == true ) {
-                assert provided_topology != true
-            }
-            else {
-                assert provided_topology != null
-            }
 
             clonality_ch = ch_samplesheet_clonality
                 .map {
@@ -314,7 +307,7 @@ workflow LCMB_MATCH {
                     .filter { it[3].readLines().first().split(' ').size() > 2 }
                     .combine( clonality_ch, by: 0 )
                     .combine( ch_samplesheet_topology, by: 0 ),
-                    'phylogenetics_indel_out',
+                    phylogenetics_outdir_basename,
                     sigprofiler_genome
                 )
             }

@@ -57,37 +57,37 @@ If phylogenetics is run (`params.run_phylogenetics==true`), there are three scen
 1. If Filter SNV has been previously run, phylogenetics is run for SNVs, there is no additional column requirements than the requirements in Filter SNV
 2. If Filter INDEL has been previously run, phylogenetics is run for INDELs.
 - If Filter SNV has also been previously run, same as 1
-- If Filter SNV has not been run, a column for tree topology is needed
+- If Filter SNV has not been run, a column for tree topology and one column for clonaluty are needed
 
-| sample_id       | match_normal_id | pdid    | bam_match                    | bai_match                        | indel_vcf                                                | indel_vcf_tbi                                                | bam                                 | bai                                     | bas                                     | met                                        | topology |
-| --------------- | --------------- | ------- | ---------------------------- | -------------------------------- | ------------------------------------------------------ | ---------------------------------------------------------- | ----------------------------------- | --------------------------------------- | --------------------------------------- | ------------------------------------------ | ------------------------ |
-| PD47151n_lo0002 | PD47151b        | PD47151 | path/to/PD47151/PD47151b.bam | path/to/PD47151/PD47151b.bam.bai | path/to/PD47151/PD47151n_lo0002.pindel.annot.vcf.gz | path/to/PD47151/PD47151n_lo0002.pindel.annot.vcf.gz.tbi | path/to/PD47151/PD47151n_lo0002.bam | path/to/PD47151/PD47151n_lo0002.bam.bai | path/to/PD47151/PD47151n_lo0002.bam.bas | path/to/PD47151/PD47151n_lo0002.bam.met.gz | path/to/PD47151n.treefile |
-| PD47151n_lo0004 | PD47151b        | PD47151 | path/to/PD47151/PD47151b.bam | path/to/PD47151/PD47151b.bam.bai | path/to/PD47151/PD47151n_lo0004.pindel.annot.vcf.gz | path/to/PD47151/PD47151n_lo0004.pindel.annot.vcf.gz.tbi | path/to/PD47151/PD47151n_lo0004.bam | path/to/PD47151/PD47151n_lo0004.bam.bai | path/to/PD47151/PD47151n_lo0004.bam.bas | path/to/PD47151/PD47151n_lo0004.bam.met.gz | path/to/PD47151n.treefile |
-| PD52103n_lo0002 | PD52103b        | PD52103 | path/to/PD52103/PD52103b.bam | path/to/PD52103/PD52103b.bam.bai | path/to/PD52103/PD52103n_lo0002.pindel.annot.vcf.gz | path/to/PD52103/PD52103n_lo0002.pindel.annot.vcf.gz.tbi | path/to/PD52103/PD52103n_lo0002.bam | path/to/PD52103/PD52103n_lo0002.bam.bai | path/to/PD52103/PD52103n_lo0002.bam.bas | path/to/PD52103/PD52103n_lo0002.bam.met.gz | path/to/PD52103n.treefile |
+| sample_id       | match_normal_id | pdid    | bam_match                    | bai_match                        | indel_vcf                                                | indel_vcf_tbi                                                | bam                                 | bai                                     | bas                                     | met                                        | topology | clonality |
+| --------------- | --------------- | ------- | ---------------------------- | -------------------------------- | ------------------------------------------------------ | ---------------------------------------------------------- | ----------------------------------- | --------------------------------------- | --------------------------------------- | ------------------------------------------ | ------------------------ | ------------------------ |
+| PD47151n_lo0002 | PD47151b        | PD47151 | path/to/PD47151/PD47151b.bam | path/to/PD47151/PD47151b.bam.bai | path/to/PD47151/PD47151n_lo0002.pindel.annot.vcf.gz | path/to/PD47151/PD47151n_lo0002.pindel.annot.vcf.gz.tbi | path/to/PD47151/PD47151n_lo0002.bam | path/to/PD47151/PD47151n_lo0002.bam.bai | path/to/PD47151/PD47151n_lo0002.bam.bas | path/to/PD47151/PD47151n_lo0002.bam.met.gz | path/to/PD47151n.treefile | path/to/PD47151/PD47151_clonality.txt |
+| PD47151n_lo0004 | PD47151b        | PD47151 | path/to/PD47151/PD47151b.bam | path/to/PD47151/PD47151b.bam.bai | path/to/PD47151/PD47151n_lo0004.pindel.annot.vcf.gz | path/to/PD47151/PD47151n_lo0004.pindel.annot.vcf.gz.tbi | path/to/PD47151/PD47151n_lo0004.bam | path/to/PD47151/PD47151n_lo0004.bam.bai | path/to/PD47151/PD47151n_lo0004.bam.bas | path/to/PD47151/PD47151n_lo0004.bam.met.gz | path/to/PD47151n.treefile | path/to/PD47151/PD47151_clonality.txt |
+| PD52103n_lo0002 | PD52103b        | PD52103 | path/to/PD52103/PD52103b.bam | path/to/PD52103/PD52103b.bam.bai | path/to/PD52103/PD52103n_lo0002.pindel.annot.vcf.gz | path/to/PD52103/PD52103n_lo0002.pindel.annot.vcf.gz.tbi | path/to/PD52103/PD52103n_lo0002.bam | path/to/PD52103/PD52103n_lo0002.bam.bai | path/to/PD52103/PD52103n_lo0002.bam.bas | path/to/PD52103/PD52103n_lo0002.bam.met.gz | path/to/PD52103n.treefile | path/to/PD52103/PD52103_clonality.txt |
 
 
 3. If neither Filter SNV nor Filter Indel has been run,
-- If phylogenetics need to be run for both SNVs, then use the topology obtained from SNV to assign INDEL mutations to (`params.snv_then_indel==true`), the required columns are `pdid`, `nr_path_snv`, `nv_path_snv`, `genotype_bin_path_snv`, `nr_path_indel`, `nv_path_indel` and `genotype_bin_path_indel`
+- If phylogenetics need to be run for both SNVs and Indels, then use the topology obtained from SNV to assign INDEL mutations to (`params.snv_then_indel==true`), the required columns are `pdid`, `nr_path_snv`, `nv_path_snv`, `genotype_bin_path_snv`, `nr_path_indel`, `nv_path_indel` and `genotype_bin_path_indel`
 
-| pdid | nr_path_snv | nv_path_snv | genotype_bin_path_snv | nr_path_indel | nv_path_indel | genotype_bin_path_indel |
-| ---- | ------- | ------- | ------------ | ------- | ------- | ------------ |
-| PD47151 | path/to/snv/PD47151/NR_somatic_noartefacts.txt | path/to/snv/PD47151/NV_somatic_noartefacts.txt | path/to/snv/PD47151/genotype_bin.txt | path/to/indel/PD47151/NR_somatic_noartefacts.txt | path/to/indel/PD47151/NV_somatic_noartefacts.txt | path/to/indel/PD47151/genotype_bin.txt |
-| PD52103 | path/to/snv/PD52103/NR_somatic_noartefacts.txt | path/to/snv/PD52103/NV_somatic_noartefacts.txt | path/to/snv/PD52103/genotype_bin.txt | path/to/indel/PD52103/NR_somatic_noartefacts.txt | path/to/indel/PD52103/NV_somatic_noartefacts.txt | path/to/indel/PD52103/genotype_bin.txt |
+| pdid | nr_path_snv | nv_path_snv | genotype_bin_path_snv | nr_path_indel | nv_path_indel | genotype_bin_path_indel | clonality |
+| ---- | ------- | ------- | ------------ | ------- | ------- | ------------ | ------------ |
+| PD47151 | path/to/snv/PD47151/NR_somatic_noartefacts.txt | path/to/snv/PD47151/NV_somatic_noartefacts.txt | path/to/snv/PD47151/genotype_bin.txt | path/to/indel/PD47151/NR_somatic_noartefacts.txt | path/to/indel/PD47151/NV_somatic_noartefacts.txt | path/to/indel/PD47151/genotype_bin.txt | path/to/PD47151/PD47151_clonality.txt |
+| PD52103 | path/to/snv/PD52103/NR_somatic_noartefacts.txt | path/to/snv/PD52103/NV_somatic_noartefacts.txt | path/to/snv/PD52103/genotype_bin.txt | path/to/indel/PD52103/NR_somatic_noartefacts.txt | path/to/indel/PD52103/NV_somatic_noartefacts.txt | path/to/indel/PD52103/genotype_bin.txt | path/to/PD52103/PD52103_clonality.txt |
 
 
 - If a tree topology needs to be calculated before assigning mutations to the branches (`params.with_topology==false`, this is assumed for SNV), the required columns are `pdid`, `nr_path`, `nv_path` and `genotype_bin_path`. For example
 
-| pdid | nr_path | nv_path | genotype_bin_path |
-| ---- | ------- | ------- | ------------ |
-| PD47151 | path/to/PD47151/NR_somatic_noartefacts.txt | path/to/PD47151/NV_somatic_noartefacts.txt | path/tp/PD47151/genotype_bin.txt |
-| PD52103 | path/to/PD52103/NR_somatic_noartefacts.txt | path/to/PD52103/NV_somatic_noartefacts.txt | path/tp/PD52103/genotype_bin.txt |
+| pdid | nr_path | nv_path | genotype_bin_path | clonality |
+| ---- | ------- | ------- | ------------ | ------------ |
+| PD47151 | path/to/PD47151/NR_somatic_noartefacts.txt | path/to/PD47151/NV_somatic_noartefacts.txt | path/tp/PD47151/genotype_bin.txt | path/to/indel/PD47151/PD47151_clonality.txt |
+| PD52103 | path/to/PD52103/NR_somatic_noartefacts.txt | path/to/PD52103/NV_somatic_noartefacts.txt | path/tp/PD52103/genotype_bin.txt | path/to/indel/PD52103/PD52103_clonality.txt |
 
 - If a tree topology is specified to not be calculated (`params.with_topology==false`, this is assumed for Indels), the required columns are `pdid`, `nr_path`, `nv_path`, `genotype_bin` and `topology`. For example
 
-| pdid | nr_path | nv_path | genotype_bin_path | topology |
-| ---- | ------- | ------- | ------------ | -------- |
-| PD47151 | path/to/PD47151/NR_somatic_noartefacts.txt | path/to/PD47151/NV_somatic_noartefacts.txt | path/tp/PD47151/genotype_bin.txt | path/to/PD47151.treefile |
-| PD52103 | path/to/PD52103/NR_somatic_noartefacts.txt | path/to/PD52103/NV_somatic_noartefacts.txt | path/tp/PD52103/genotype_bin.txt | path/to/PD47151.treefile |
+| pdid | nr_path | nv_path | genotype_bin_path | topology | clonality |
+| ---- | ------- | ------- | ------------ | -------- | ------------ |
+| PD47151 | path/to/PD47151/NR_somatic_noartefacts.txt | path/to/PD47151/NV_somatic_noartefacts.txt | path/tp/PD47151/genotype_bin.txt | path/to/PD47151.treefile | path/to/indel/PD47151/PD47151_clonality.txt |
+| PD52103 | path/to/PD52103/NR_somatic_noartefacts.txt | path/to/PD52103/NV_somatic_noartefacts.txt | path/tp/PD52103/genotype_bin.txt | path/to/PD47151.treefile | path/to/indel/PD52103/PD52103_clonality.txt |
 
 
 
@@ -128,6 +128,7 @@ If phylogenetics is run (`params.run_phylogenetics==true`), there are three scen
 | `genotype_bin_path` | binary genotype file for `pdid`, must exist |
 | REQUIRED COLUMNS FOR PHYLOGENETICS-GIVEN-TREE-TOPOLOGY WITHOUT RUNNNING FILTERING SNVs (`--run_phylogenetics true --run_filter_snv false --run_filter_indel true`, or `--run_phylogenetics true --run_filter_snv false --run_filter_indel false --with_topology true`) ---------------------------------------------------- |
 | `topology` | tree topology file for `pdid`, must exist |
+| `clonality` | clonality file for `pdid`, must exist |
 
 ## Other inputs
 
@@ -148,10 +149,23 @@ If phylogenetics is run (`params.run_phylogenetics==true`), there are three scen
 | `snv_vcfilter_config` |  type: file-path, default: "$projectDir/data/default/snv_default.filter", Path to vcfilter config file, default to data/default/snv_default.filter  |                                                            |
 | `snv_rho_threshold` |  type: number, default: 0.1, rho threshold in the beta-binomial test below which variant is filtered out  |                                                            |
 | `sigprofiler_genome` |  type: string, genome to input to sigprofiler matrix generator   |                                                            |
+| `hairpin2_input_snv_json` |  type: file-path, Path to hairpin2 config file, default to data/default/hairpin2_input_snv.json  |                                                            |
+| `hairpin2_name_mapping_snv` |  type: file-path, dPath to hairpin2 name mapping file, default to data/default/hairpin2_name_mapping_snv.json  |                                                            |
+| `min_good_reads` |  type: number, default: 3, the minimum number of good reads below which a variant is filtered out upstream to clonality (same as in hairpin2)  |                                                            |
+| `max_K` |  type: number, default: 3, maximum number of clusters to consider when estimating cluster peaks and weights, clonality test will trial K from 1 to max_K  |                                                            |
+| `max_iter` |  type: number, default: 5, maximum number of iterations post initiation for the clonality clustering algorithm before convergence is reached, each iteration samples 2000 parameter sets, including 1000 burn-in samples  |                                                            |
+| `nchains` |  type: number, default: 5, number of chains to run in parallel for the clonality clustering algorithm  |
+| `clonal_threshold` |  type: number, default: 0.25, peak VAF below which a cluster is considered polyclonal  |
+| `proportion_pass_clonality` |  type: number, default: 0.9, if the weights of the clusters with peak VAF above the clonal_threshold sum to less than this value, the sample is considered polyclonal  |                                                            |
+
+
 | REQUIRED PARAMS IF RUNNING FILTER_INDEL |                                                          |
 | `indel_vcfilter_config` |  type: file-path, default: "$projectDir/data/default/indel_default.filter", Path to vcfilter config file, default to data/default/indel_default.filter  |                                                            |
 | `indel_rho_threshold` |  type: number, default: 0.2, rho threshold in the beta-binomial test below which variant is filtered out  |                                                            |
 | `sigprofiler_genome` |  type: string, genome to input to sigprofiler matrix generator   |                                                            |
+| `hairpin2_input_indel_json` |  type: file-path, Path to hairpin2 config file, default to data/default/hairpin2_input_indel.json  |                                                            |
+| `hairpin2_name_mapping_indel` |  type: file-path, dPath to hairpin2 name mapping file, default to data/default/hairpin2_name_mapping_indel.json  |                                                            |
+
 | REQUIRED PARAMS IF RUNNING PHYLOGENETICS WITHOUT RUNNING FILTER_SNV OR FILTER_INDEL |                                                          |
 | `snv_then_indel` |  type: boolean, whether running phylogenetics for SNVs (phylogenetics) followed by phylogenetics for INDELS (phylogenetics_provided_topology)   |                                                            |
 | `provided_topology` |  type: boolean, when only one phylogenetics pipeline is run, whether it is provided a topology   |                                                            |

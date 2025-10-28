@@ -76,67 +76,19 @@ workflow PIPELINE_INITIALISATION {
     ch_samplesheet_topology = null
     ch_samplesheet_clonality = null
 
+    // Checking the options generic to the whole pipeline
+    UTILS_NFSCHEMA_PLUGIN (
+        workflow,
+        validate_params,
+        "${projectDir}/assets/schemas/nextflow_schema_generic.json"
+        )
     if ( run_conpair == true ) {
-        if ( run_filter_snv == true ) {
-            if ( run_filter_indel == true ) {
-                if ( run_phylogenetics == true ) {
-                    UTILS_NFSCHEMA_PLUGIN (
-                    workflow,
-                    validate_params,
-                    "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv_filter-indel_phylogenetics.json"
-                    )
-                }
-                else {
-                    UTILS_NFSCHEMA_PLUGIN (
-                        workflow,
-                        validate_params,
-                        "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv_filter-indel.json"
-                    )
-                }
-            }
-            else {
-                if ( run_phylogenetics == true ) {
-                    UTILS_NFSCHEMA_PLUGIN (
-                    workflow,
-                    validate_params,
-                    "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv_phylogenetics.json"
-                    )
-                }
-                else {
-                    UTILS_NFSCHEMA_PLUGIN (
-                    workflow,
-                    validate_params,
-                    "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv.json"
-                    )
-                }
-            }
-        }
-        else if ( run_filter_indel == true ) {
-            if ( run_phylogenetics == true ) {
-                UTILS_NFSCHEMA_PLUGIN (
-                workflow,
-                validate_params,
-                "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-indel_phylogenetics.json"
-                )
-            }
-            else {
-                UTILS_NFSCHEMA_PLUGIN (
-                workflow,
-                validate_params,
-                "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-indel.json"
-                )
-            }
-        }
-        else {
-            //  Can't run conpair then phylogenetics without filtering - these should be run separately
-            assert run_phylogenetics == false
-            // CONPAIR ONLY
-            UTILS_NFSCHEMA_PLUGIN (
-                    workflow,
-                    validate_params,
-                    "${projectDir}/assets/schemas/nextflow_schema_conpair.json"
-                )
-        }
+        UTILS_NFSCHEMA_PLUGIN (
+            workflow,
+            validate_params,
+            "${projectDir}/assets/schemas/nextflow_schema_conpair.json"
+            )
+
         // get samplesheet
         Channel
             .fromList(samplesheetToList(
@@ -144,127 +96,292 @@ workflow PIPELINE_INITIALISATION {
                 "${projectDir}/assets/schemas/schema_input_conpair.json"))
             .set { ch_samplesheet_conpair }
     }
-    else if ( run_filter_snv == true ) {
-        if ( run_filter_indel == true ) {
-            if ( run_phylogenetics == true ) {
-                UTILS_NFSCHEMA_PLUGIN (
-                workflow,
-                validate_params,
-                "${projectDir}/assets/schemas/nextflow_schema_filter-snv_filter-indel_phylogenetics.json"
-                )
-            }
-            else {
-                UTILS_NFSCHEMA_PLUGIN (
-                workflow,
-                validate_params,
-                "${projectDir}/assets/schemas/nextflow_schema_filter-snv_filter-indel.json"
+
+    if ( run_filter_snv == true ) {
+        UTILS_NFSCHEMA_PLUGIN (
+            workflow,
+            validate_params,
+            "${projectDir}/assets/schemas/nextflow_schema_filter-snv.json"
             )
-            }
-        }
-        else {
-            if ( run_phylogenetics == true ) {
-                UTILS_NFSCHEMA_PLUGIN (
-                workflow,
-                validate_params,
-                "${projectDir}/assets/schemas/nextflow_schema_filter-snv_phylogenetics.json"
-                )
-            }
-            else {
-                UTILS_NFSCHEMA_PLUGIN (
-                workflow,
-                validate_params,
-                "${projectDir}/assets/schemas/nextflow_schema_filter-snv.json"
-            )
-            }
-        }
+
         // get samplesheet
+        // if conpair is also being run, ch_samplesheet_filter_snv is not null, but this is only for validation of columns
         Channel
         .fromList(samplesheetToList(
             input,
-            "${projectDir}/assets/schemas/schema_input_conpair_filter-snv.json"))
+            "${projectDir}/assets/schemas/schema_input_filter-snv.json"))
         .set { ch_samplesheet_filter_snv }
-        if ( run_filter_indel == true ) {
-            Channel
-            .fromList(samplesheetToList(
-                input,
-                "${projectDir}/assets/schemas/schema_input_conpair_filter-indel.json"))
-            .set { ch_samplesheet_filter_indel }
-        }
     }
-    else if ( run_filter_indel == true ) {
-        if ( run_phylogenetics == true ) {
-            UTILS_NFSCHEMA_PLUGIN (
-                workflow,
-                validate_params,
-                "${projectDir}/assets/schemas/nextflow_schema_filter-indel_phylogenetics.json"
-            )
-        }
-        else {
-            UTILS_NFSCHEMA_PLUGIN (
-                workflow,
-                validate_params,
-                "${projectDir}/assets/schemas/nextflow_schema_filter-indel.json"
-            )
-        }
 
-        // get samplesheet plus topology and clonality if applicable
+    if ( run_filter_indel == true ) {
+        UTILS_NFSCHEMA_PLUGIN (
+            workflow,
+            validate_params,
+            "${projectDir}/assets/schemas/nextflow_schema_filter-indel.json"
+            )
+
+        // get samplesheet
+        // if conpair is also being run, ch_samplesheet_filter_indel is not null, but this is only for validation of columns
         Channel
-            .fromList(samplesheetToList(
-                input,
-                "${projectDir}/assets/schemas/schema_input_conpair_filter-indel.json"))
-            .set { ch_samplesheet_filter_indel }
-        if ( run_phylogenetics == true ) {
-            // topology
-            Channel
-            .fromList(samplesheetToList(
-                input,
-                "${projectDir}/assets/schemas/schema_input_topology.json"))
-            .set { ch_samplesheet_topology }
+        .fromList(samplesheetToList(
+            input,
+            "${projectDir}/assets/schemas/schema_input_filter-indel.json"))
+        .set { ch_samplesheet_filter_indel }
+    }
+
+    if ( run_phylogenetics == true ) {
+        UTILS_NFSCHEMA_PLUGIN (
+            workflow,
+            validate_params,
+            "${projectDir}/assets/schemas/nextflow_schema_phylogenetics.json"
+            )
+        if ( run_filter_snv == true ) {
+            println("Nothing to check in the samplesheet when running phylogenetics as topology can be built from filtered SNV output and clonality is one output from filtered SNV")
+        }
+        else if ( run_filter_indel == true ) {
+            // topology and clonality required if run_filter_snv is false
             // clonality
             Channel
             .fromList(samplesheetToList(
                 input,
                 "${projectDir}/assets/schemas/schema_input_clonality.json"))
             .set { ch_samplesheet_clonality }
+            // topology
+            Channel
+                .fromList(samplesheetToList(
+                    input,
+                    "${projectDir}/assets/schemas/schema_input_topology.json"))
+                .set { ch_samplesheet_topology }
         }
-    }
-    else if ( run_phylogenetics == true ) {
-        // PHYLOGENETICS ONLY
-        UTILS_NFSCHEMA_PLUGIN (
-            workflow,
-            validate_params,
-            "${projectDir}/assets/schemas/nextflow_schema_phylogenetics.json"
-            )
-        // get samplesheet
-        // clonality
+        else {
+            if ( snv_then_indel == true ) {
+                assert provided_topology != true
+            }
+            else {
+                assert provided_topology != null
+            }
+
+            // get samplesheets
+            // clonality is always required
             Channel
             .fromList(samplesheetToList(
                 input,
                 "${projectDir}/assets/schemas/schema_input_clonality.json"))
             .set { ch_samplesheet_clonality }
-        if ( snv_then_indel == true ) {
-            Channel
-            .fromList(samplesheetToList(
-                input,
-                "${projectDir}/assets/schemas/schema_input_phylogenetics_snv-then-indel.json"))
-            .set { ch_samplesheet_snv_then_indel }
-        }
-        else {
-            Channel
-            .fromList(samplesheetToList(
-                input,
-                "${projectDir}/assets/schemas/schema_input_phylogenetics.json"))
-            .set { ch_samplesheet_phylogenetics }
-            if ( provided_topology == true ) {
+
+            if ( snv_then_indel == true ) {
                 Channel
                 .fromList(samplesheetToList(
                     input,
-                    "${projectDir}/assets/schemas/schema_input_topology.json"))
-                .set { ch_samplesheet_topology }
+                    "${projectDir}/assets/schemas/schema_input_phylogenetics_snv-then-indel.json"))
+                .set { ch_samplesheet_snv_then_indel }
+            }
+            else {
+                Channel
+                .fromList(samplesheetToList(
+                    input,
+                    "${projectDir}/assets/schemas/schema_input_phylogenetics.json"))
+                .set { ch_samplesheet_phylogenetics }
+                if ( provided_topology == true ) {
+                    Channel
+                    .fromList(samplesheetToList(
+                        input,
+                        "${projectDir}/assets/schemas/schema_input_topology.json"))
+                    .set { ch_samplesheet_topology }
+                }
             }
         }
-
     }
+
+    // if ( run_conpair == true ) {
+    //     if ( run_filter_snv == true ) {
+    //         if ( run_filter_indel == true ) {
+    //             if ( run_phylogenetics == true ) {
+    //                 UTILS_NFSCHEMA_PLUGIN (
+    //                 workflow,
+    //                 validate_params,
+    //                 "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv_filter-indel_phylogenetics.json"
+    //                 )
+    //             }
+    //             else {
+    //                 UTILS_NFSCHEMA_PLUGIN (
+    //                     workflow,
+    //                     validate_params,
+    //                     "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv_filter-indel.json"
+    //                 )
+    //             }
+    //         }
+    //         else {
+    //             if ( run_phylogenetics == true ) {
+    //                 UTILS_NFSCHEMA_PLUGIN (
+    //                 workflow,
+    //                 validate_params,
+    //                 "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv_phylogenetics.json"
+    //                 )
+    //             }
+    //             else {
+    //                 UTILS_NFSCHEMA_PLUGIN (
+    //                 workflow,
+    //                 validate_params,
+    //                 "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-snv.json"
+    //                 )
+    //             }
+    //         }
+    //     }
+    //     else if ( run_filter_indel == true ) {
+    //         if ( run_phylogenetics == true ) {
+    //             UTILS_NFSCHEMA_PLUGIN (
+    //             workflow,
+    //             validate_params,
+    //             "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-indel_phylogenetics.json"
+    //             )
+    //         }
+    //         else {
+    //             UTILS_NFSCHEMA_PLUGIN (
+    //             workflow,
+    //             validate_params,
+    //             "${projectDir}/assets/schemas/nextflow_schema_conpair_filter-indel.json"
+    //             )
+    //         }
+    //     }
+    //     else {
+    //         //  Can't run conpair then phylogenetics without filtering - these should be run separately
+    //         assert run_phylogenetics == false
+    //         // CONPAIR ONLY
+    //         UTILS_NFSCHEMA_PLUGIN (
+    //                 workflow,
+    //                 validate_params,
+    //                 "${projectDir}/assets/schemas/nextflow_schema_conpair.json"
+    //             )
+    //     }
+    //     // get samplesheet
+    //     Channel
+    //         .fromList(samplesheetToList(
+    //             input,
+    //             "${projectDir}/assets/schemas/schema_input_conpair.json"))
+    //         .set { ch_samplesheet_conpair }
+    // }
+    // else if ( run_filter_snv == true ) {
+    //     if ( run_filter_indel == true ) {
+    //         if ( run_phylogenetics == true ) {
+    //             UTILS_NFSCHEMA_PLUGIN (
+    //             workflow,
+    //             validate_params,
+    //             "${projectDir}/assets/schemas/nextflow_schema_filter-snv_filter-indel_phylogenetics.json"
+    //             )
+    //         }
+    //         else {
+    //             UTILS_NFSCHEMA_PLUGIN (
+    //             workflow,
+    //             validate_params,
+    //             "${projectDir}/assets/schemas/nextflow_schema_filter-snv_filter-indel.json"
+    //         )
+    //         }
+    //     }
+    //     else {
+    //         if ( run_phylogenetics == true ) {
+    //             UTILS_NFSCHEMA_PLUGIN (
+    //             workflow,
+    //             validate_params,
+    //             "${projectDir}/assets/schemas/nextflow_schema_filter-snv_phylogenetics.json"
+    //             )
+    //         }
+    //         else {
+    //             UTILS_NFSCHEMA_PLUGIN (
+    //             workflow,
+    //             validate_params,
+    //             "${projectDir}/assets/schemas/nextflow_schema_filter-snv.json"
+    //         )
+    //         }
+    //     }
+    //     // get samplesheet
+    //     Channel
+    //     .fromList(samplesheetToList(
+    //         input,
+    //         "${projectDir}/assets/schemas/schema_input_conpair_filter-snv.json"))
+    //     .set { ch_samplesheet_filter_snv }
+    //     if ( run_filter_indel == true ) {
+    //         Channel
+    //         .fromList(samplesheetToList(
+    //             input,
+    //             "${projectDir}/assets/schemas/schema_input_conpair_filter-indel.json"))
+    //         .set { ch_samplesheet_filter_indel }
+    //     }
+    // }
+    // else if ( run_filter_indel == true ) {
+    //     if ( run_phylogenetics == true ) {
+    //         UTILS_NFSCHEMA_PLUGIN (
+    //             workflow,
+    //             validate_params,
+    //             "${projectDir}/assets/schemas/nextflow_schema_filter-indel_phylogenetics.json"
+    //         )
+    //     }
+    //     else {
+    //         UTILS_NFSCHEMA_PLUGIN (
+    //             workflow,
+    //             validate_params,
+    //             "${projectDir}/assets/schemas/nextflow_schema_filter-indel.json"
+    //         )
+    //     }
+
+    //     // get samplesheet plus topology and clonality if applicable
+    //     Channel
+    //         .fromList(samplesheetToList(
+    //             input,
+    //             "${projectDir}/assets/schemas/schema_input_conpair_filter-indel.json"))
+    //         .set { ch_samplesheet_filter_indel }
+    //     if ( run_phylogenetics == true ) {
+    //         // topology
+    //         Channel
+    //         .fromList(samplesheetToList(
+    //             input,
+    //             "${projectDir}/assets/schemas/schema_input_topology.json"))
+    //         .set { ch_samplesheet_topology }
+    //         // clonality
+    //         Channel
+    //         .fromList(samplesheetToList(
+    //             input,
+    //             "${projectDir}/assets/schemas/schema_input_clonality.json"))
+    //         .set { ch_samplesheet_clonality }
+    //     }
+    // }
+    // else if ( run_phylogenetics == true ) {
+    //     // PHYLOGENETICS ONLY
+    //     UTILS_NFSCHEMA_PLUGIN (
+    //         workflow,
+    //         validate_params,
+    //         "${projectDir}/assets/schemas/nextflow_schema_phylogenetics.json"
+    //         )
+    //     // get samplesheet
+    //     // clonality
+    //         Channel
+    //         .fromList(samplesheetToList(
+    //             input,
+    //             "${projectDir}/assets/schemas/schema_input_clonality.json"))
+    //         .set { ch_samplesheet_clonality }
+    //     if ( snv_then_indel == true ) {
+    //         Channel
+    //         .fromList(samplesheetToList(
+    //             input,
+    //             "${projectDir}/assets/schemas/schema_input_phylogenetics_snv-then-indel.json"))
+    //         .set { ch_samplesheet_snv_then_indel }
+    //     }
+    //     else {
+    //         Channel
+    //         .fromList(samplesheetToList(
+    //             input,
+    //             "${projectDir}/assets/schemas/schema_input_phylogenetics.json"))
+    //         .set { ch_samplesheet_phylogenetics }
+    //         if ( provided_topology == true ) {
+    //             Channel
+    //             .fromList(samplesheetToList(
+    //                 input,
+    //                 "${projectDir}/assets/schemas/schema_input_topology.json"))
+    //             .set { ch_samplesheet_topology }
+    //         }
+    //     }
+
+    // }
 
 
     emit:

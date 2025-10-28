@@ -29,6 +29,7 @@ workflow PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY {
     )
 
     // assign mutation to provided topology
+    // only keep trees with >2 samples
     mutToTree(
         rmPolyclonal.out.phylogenetic_input
         .combine( topology, by: 0 )

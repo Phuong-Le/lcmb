@@ -60,9 +60,9 @@ if (length(sample_vaf_cols) == 1) {
 } else {
 
   Muts = paste(vaf_data$Chrom,vaf_data$Pos,vaf_data$Ref,vaf_data$Alt,sep="_")
-  Genotype = vaf_data[, grepl("VAF",colnames(vaf_data)) & colnames(vaf_data)!=paste0(match_normal_id,"_VAF")]
-  NR = vaf_data[, grepl("DEP",colnames(vaf_data)) & colnames(vaf_data)!=paste0(match_normal_id,"_DEP")] # NR is the matrix with total depth (samples as columns, mutations rows
-  NV = vaf_data[, grepl("MTR",colnames(vaf_data)) & colnames(vaf_data)!=paste0(match_normal_id,"_MTR")] # is matrix of reads supporting variants
+  Genotype = vaf_data[, grepl("VAF",colnames(vaf_data)) & colnames(vaf_data)!=paste0(match_normal_id,"_VAF"),drop=F]
+  NR = vaf_data[, grepl("DEP",colnames(vaf_data)) & colnames(vaf_data)!=paste0(match_normal_id,"_DEP"),drop=F] # NR is the matrix with total depth (samples as columns, mutations rows
+  NV = vaf_data[, grepl("MTR",colnames(vaf_data)) & colnames(vaf_data)!=paste0(match_normal_id,"_MTR"),drop=F] # is matrix of reads supporting variants
 
 
   rownames(Genotype) = rownames(NV) = rownames(NR) = Muts
@@ -102,8 +102,8 @@ if (length(sample_vaf_cols) == 1) {
   rho_df = data.frame(rho_est = rho_est, filter_out_by_rho = flt_rho)
 
   # save artefact filtered NR and NV to disk
-  NR_somatic_noartefacts = NR_somatic_nonzero[!flt_rho,]
-  NV_somatic_noartefacts = NV_somatic[!flt_rho,]
+  NR_somatic_noartefacts = NR_somatic_nonzero[!flt_rho,,drop=F]
+  NV_somatic_noartefacts = NV_somatic[!flt_rho,,drop=F]
   write.table(NR_somatic_noartefacts, paste0(outdir,"/NR_bbinom_filtered.txt"), row.names = T, col.names = T, quote=F)
   write.table(NV_somatic_noartefacts, paste0(outdir,"/NV_bbinom_filtered.txt"), row.names = T, col.names = T, quote=F)
 
@@ -132,7 +132,7 @@ if (length(sample_vaf_cols) == 1) {
   write.table(somatic_ids_rho, paste0(outdir,"/somatic_ids_rho.txt"), row.names = F, col.names = T, quote=F)
 
   # write ids for somatics and artefact filtered mutations
-  somatic_artefacts_fltd = somatic_ids[!flt_rho, c('Chrom', 'Pos')]
+  somatic_artefacts_fltd = somatic_ids[!flt_rho, c('Chrom', 'Pos'),drop=F]
   somatic_artefacts_fltd$Preceding_pos = somatic_artefacts_fltd$Pos - 1
   somatic_artefacts_fltd = somatic_artefacts_fltd[, c('Chrom', 'Preceding_pos', 'Pos')]
 

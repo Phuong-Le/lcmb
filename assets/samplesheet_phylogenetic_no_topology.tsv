@@ -1,2 +1,2 @@
-pdid	nr_path	nv_path	genotype_bin_path
-PD47151	/path/to/filter_snp_out/PD47151/NR_bbinom_filtered.txt	/path/to/filter_snp_out/PD47151/NV_bbinom_filtered.txt	/path/to/filter_snp_out/PD47151/genotype_bin.txt
+pdid	nr_path	nv_path	genotype_bin_path	clonality
+PD47151	/path/to/filter_snp_out/PD47151/NR_bbinom_filtered.txt	/path/to/filter_snp_out/PD47151/NV_bbinom_filtered.txt	/path/to/filter_snp_out/PD47151/genotype_bin.txt	/path/to/PD47151/PD47151_clonality.txt

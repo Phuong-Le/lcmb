@@ -19,6 +19,7 @@ workflow PHYLOGENETICS { // phylogenetics workflow for SNVs
     )
 
     //  get phylogeny
+    // only keep trees with >2 samples
     getPhylogeny(
         rmPolyclonal.out.phylogenetic_input
         .filter { it[3].readLines().first().split(' ').size() > 2 },

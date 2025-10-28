@@ -1,5 +1,5 @@
 process clonalityTest {
-    // label 'process_tiny'
+    label 'process_multicore'
 
     publishDir "${params.outdir}/filter_${mut_type}_out/${pdid}", pattern: "${sample_id}.clonality.log",  mode: params.publish_dir_mode
     publishDir "${params.outdir}/filter_${mut_type}_out/${pdid}", pattern: "${sample_id}_w.txt",  mode: params.publish_dir_mode

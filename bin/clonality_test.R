@@ -52,6 +52,7 @@ nv = read.table(nv_path, header = T, check.names = F)
 vcf = read.table(vcf_path, header = T, check.names = F)
 mutations = paste(vcf[,1], vcf[,2], vcf[,4], vcf[,5], sep = '_') # 1, 2, 4, 5 correspond to chrom, pos, ref and pos
 nr_sample = nr[mutations, sample_id]
+nv_sample = nv[mutations, sample_id]
 
 
 if (truncated_value < 0) stop(paste0(truncated_value, ' should be > 0'))
@@ -60,10 +61,11 @@ if (!all(nr_sample > truncated_value)) stop(paste0('some depths are < ', truncat
 if (min(nr_sample) < truncated_value) stop(paste0('minimum read depth ', min(nr_sample), ' must >= truncated value, ', truncated_value))
 log_print(paste0('minimum read depth: ', min(nr_sample)))
 
-mutation_burden = length(nr_sample) # 1359 mutations
+mutation_burden = length(nr_sample)
+log_print(paste0('mutation burden: ', mutation_burden))
 mean_depth = round(mean(nr_sample))
 log_print(paste0('average read depth: ', mean_depth))
-nv_sample = nv[mutations, sample_id]
+
 
 df = data.frame(NV = nv_sample,
                 NR = nr_sample,
@@ -109,6 +111,7 @@ for (K in 1:max_K) {
                    init = init_list
     )
     mod_summary = summary(fit_t)
+    nchains = dim(mod_summary$c_summary)[3]
     rhat_max = max(mod_summary$summary[, 'Rhat'], na.rm = T)
   }
   if (rhat_max > 1.05) {
