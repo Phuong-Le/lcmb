@@ -1,2 +1,2 @@
-pdid	nr_path_snv	nv_path_snv	genotype_bin_path_snv	nr_path_indel	nv_path_indel	genotype_bin_path_indel
-PD47151	/path/to/filter_snp_out/PD47151/NR_somatic_noartefacts.txt	/path/to/filter_snp_out/PD47151/NV_somatic_noartefacts.txt	/path/to/filter_snp_out/PD47151/genotype_bin.txt	/path/to/filter_indel_out/PD47151/NR_somatic_noartefacts.txt	/path/to/filter_indel_out/PD47151/NV_somatic_noartefacts.txt	/path/to/filter_indel_out/PD47151/genotype_bin.txt
+pdid	nr_path_snv	nv_path_snv	genotype_bin_path_snv	nr_path_indel	nv_path_indel	genotype_bin_path_indel	clonality
+PD47151	/path/to/filter_snp_out/PD47151/NR_somatic_noartefacts.txt	/path/to/filter_snp_out/PD47151/NV_somatic_noartefacts.txt	/path/to/filter_snp_out/PD47151/genotype_bin.txt	/path/to/filter_indel_out/PD47151/NR_somatic_noartefacts.txt	/path/to/filter_indel_out/PD47151/NV_somatic_noartefacts.txt	/path/to/filter_indel_out/PD47151/genotype_bin.txt	/path/to/PD47151/PD47151_clonality.txt

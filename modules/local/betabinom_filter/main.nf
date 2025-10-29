@@ -8,7 +8,7 @@ process betaBinomFilter {
     val mut_type
 
     output:
-    path vcf_filtered, emit: vcf_filtered
+    tuple val(pdid), val(sample_id), path(vcf_filtered), emit: vcf_filtered
     path vcf_filtered_gz, emit: vcf_filtered_gz
     path vcf_filtered_tbi, emit: vcf_filtered_tbi
 

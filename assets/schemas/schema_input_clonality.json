@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/nf-core/sangersomatic/master/assets/schema_input.json",
+    "$id": "https://raw.githubusercontent.com/nf-core/sangersomatic/master/assets/schema_input_clonality.json",
     "title": "sangersomatic pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
     "type": "array",
@@ -14,12 +14,12 @@
                 "description": "Donor ID (PDID), cannot contain spaces",
                 "meta": ["pdid"]
             },
-            "topology": {
+            "clonality": {
                 "type": "string",
                 "format": "file-path",
-                "description": "path to tree topology file for donor <pdid>"
+                "description": "path to tree clonality file for donor <pdid>"
             }
         },
-        "required": ["pdid", "topology"]
+        "required": ["pdid", "clonality"]
     }
 }

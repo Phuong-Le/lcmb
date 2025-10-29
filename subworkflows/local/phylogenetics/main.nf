@@ -1,3 +1,4 @@
+include { rmPolyclonal } from "$projectDir/modules/local/rm_polyclonal"
 include { getPhylogeny } from "$projectDir/modules/local/get_phylogeny"
 include { matrixGeneratorBranches } from "$projectDir/modules/local/matrix_generator_branches"
 include { concatMatrices } from "$projectDir/modules/local/concat_matrices"
@@ -11,9 +12,17 @@ workflow PHYLOGENETICS { // phylogenetics workflow for SNVs
     sigprofiler_genome
 
     main:
-    //  get phylogeny
-    getPhylogeny(
+    // remove polyclonal samples
+    rmPolyclonal(
         phylogenetics_input_ch,
+        outdir_basename
+    )
+
+    //  get phylogeny
+    // only keep trees with >2 samples
+    getPhylogeny(
+        rmPolyclonal.out.phylogenetic_input
+        .filter { it[3].readLines().first().split(' ').size() > 2 },
         outdir_basename
     )
 

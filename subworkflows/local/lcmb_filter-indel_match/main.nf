@@ -116,7 +116,9 @@ workflow LCMB_FILTER_INDEL_MATCH {
 
     // generate mutation matrix for the samples by SigProfilerMatrixGenerator
     matrixGeneratorSamples(
-        betaBinomFilter.out.vcf_filtered.toList(),
+        betaBinomFilter.out.vcf_filtered
+        .map { pdid, sample_id, vcf_filtered -> vcf_filtered }
+        .toList(),
         mut_type,
         sigprofiler_genome
         )
@@ -128,7 +130,7 @@ workflow LCMB_FILTER_INDEL_MATCH {
         )
 
     emit:
-    betaBinomFilterIndex.out.phylogenetics_input
+    betaBinomFilterIndex.out.phylogenetic_raw_input
 
 
 }

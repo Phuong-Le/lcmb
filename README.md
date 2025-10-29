@@ -187,7 +187,7 @@ The input sample sheet should be in a tab delimited format (extension must be .t
 | `genotype_bin_path` | binary genotype file for `pdid`, must exist |
 | REQUIRED COLUMNS FOR PHYLOGENETICS-GIVEN-TREE-TOPOLOGY WITHOUT RUNNNING FILTERING SNVs (`--run_phylogenetics true --run_filter_snv false --run_filter_indel true`, or `--run_phylogenetics true --run_filter_snv false --run_filter_indel false --with_topology true`)  |
 | `topology` | tree topology file for `pdid`, must exist |
-
+| `clonality` | clonality file for `pdid`, must exist |
 
 Please find the detailed instructions to run the pipeline, including the input parameters in [docs/usage.md](docs/usage.md). You can run the pipeline using:
 
@@ -270,7 +270,7 @@ Chloe Pacyna
 Yichen Wang
 Shriram Bhosle
 Daniel Leongamornlert
-
+Nick Williams
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 

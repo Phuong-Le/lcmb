@@ -43,15 +43,15 @@ library(ggtree)
   tree=read.tree(tree_path)
   tree$edge.length=rep(1,nrow(tree$edge))
   tree=drop.tip(tree,"Ancestral")
-  NR_flt = as.matrix(NR_flt[,tree$tip.label])
-  NV_flt = as.matrix(NV_flt[,tree$tip.label])
+  NR_flt = as.matrix(NR_flt[,tree$tip.label, drop=F])
+  NV_flt = as.matrix(NV_flt[,tree$tip.label, drop=F])
 }
 
 # assigning mutations to tree
 {
 present_vars=rowSums(genotype_bin>0)>0
-NR_flt=NR_flt[present_vars,]
-NV_flt=NV_flt[present_vars,]
+NR_flt=NR_flt[present_vars, , drop=F]
+NV_flt=NV_flt[present_vars, , drop=F]
 df=reconstruct_genotype_summary(tree)
 res=assign_to_tree(tree = tree,
                    mtr=NV_flt,
