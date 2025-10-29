@@ -10,6 +10,7 @@ library(scales)
 library(distributionsR)
 library(optparse)
 options(mc.cores = parallel::detectCores())
+rstan_options(threads_per_chain = 1)
 options(stringsAsFactors = F)
 
 # parsing arguments
@@ -56,9 +57,11 @@ nv_sample = nv[mutations, sample_id]
 
 
 if (truncated_value < 0) stop(paste0(truncated_value, ' should be > 0'))
-if (!all(nr_sample > truncated_value)) stop(paste0('some depths are < ', truncated_value))
+if (!all(nr_sample >= truncated_value)) log_warning(paste0(mutations[nr_sample < truncated_value], ' at ', nr_sample[nr_sample < truncated_value], ' depths and ', nv_sample[nr_sample < truncated_value], ' supporting reads have depths < ', truncated_value, '\n'))
 
-if (min(nr_sample) < truncated_value) stop(paste0('minimum read depth ', min(nr_sample), ' must >= truncated value, ', truncated_value))
+if (!all(nv_sample >= truncated_value)) log_warning(paste0(mutations[nv_sample < truncated_value], ' at ', nr_sample[nv_sample < truncated_value], ' depths and ', nv_sample[nv_sample < truncated_value], ' supporting reads have number of supporting reads < ', truncated_value, '\n'))
+
+
 log_print(paste0('minimum read depth: ', min(nr_sample)))
 
 mutation_burden = length(nr_sample)
@@ -66,11 +69,16 @@ log_print(paste0('mutation burden: ', mutation_burden))
 mean_depth = round(mean(nr_sample))
 log_print(paste0('average read depth: ', mean_depth))
 
+nv_sample_trunc_depth = nv_sample[which(nr_sample >= truncated_value)]
+nr_sample_trunc_depth = nr_sample[which(nr_sample >= truncated_value)]
+nv_sample_trunc_mtr = nv_sample_trunc_depth[which(nv_sample_trunc_depth >= truncated_value)]
+nr_sample_trunc_mtr = nr_sample_trunc_depth[which(nv_sample_trunc_depth >= truncated_value)]
 
-df = data.frame(NV = nv_sample,
-                NR = nr_sample,
-                vaf = nv_sample / nr_sample)
 
+df = data.frame(NV = nv_sample_trunc_mtr,
+                NR = nr_sample_trunc_mtr,
+                vaf = nv_sample_trunc_mtr / nr_sample_trunc_mtr)
+mutation_burden_trunc = nrow(df)
 
 # apply mix model and model selection
 # stan
@@ -78,7 +86,7 @@ mod_list = list()
 for (K in 1:max_K) {
   log_print(paste0('trying ', K, ' cluster(s)'))
   stan_data = list(K = K,
-                   N = mutation_burden,
+                   N = mutation_burden_trunc,
                    t = truncated_value,
                    NR = df$NR,
                    NV = df$NV)
@@ -179,7 +187,7 @@ p = ggplot() +
   geom_histogram(data = df, mapping = aes(x = vaf), alpha = 0.7, position = 'identity', col = '#29335c', breaks = seq(0, 1, bw)) +
   scale_x_continuous(breaks=seq(0, 1, 0.1)) +
   scale_y_continuous(limits = c(0, NA), expand = c(0,0))+
-  ggtitle(paste0(sample_id, ', mean depth = ', mean_depth, ', snv burden = ', mutation_burden)) +
+  ggtitle(paste0(sample_id, ', mean depth = ', mean_depth, ', snv burden = ', mutation_burden, ', truncated snv burden = ', mutation_burden_trunc)) +
   theme_pubr()
 
 subtitles = paste0('p', 1:length(p_s), ' = ', round(p_s, 2), ', w', 1:length(w_s), ' = ', round(w_s, 2))
@@ -191,7 +199,7 @@ for (i in 1:length(p_s)) {
   w = w_s[i]
   peak = p_s[i]
 
-  nmuts = round(mutation_burden*w)
+  nmuts = round(mutation_burden_trunc*w)
 
   nr_sim = r_trunc_pois(n = nmuts, lambda = mean_depth, min_x = truncated_value)
   nv_sim = r_trunc_binom(n = nmuts, size = nr_sim, prob = peak, min_x = truncated_value)
