@@ -17,7 +17,7 @@ process cgpVafChrom {
     """
     rm -f "${pdid}_${mut_type}_vaf.tsv"
     rm -rf tmpvaf_*
-    cgpVaf.pl -d . -o . -a ${mut_type} -g  ${fasta} -hdr  ${high_depth_regions} --vcf  ${vcf} --normal_bam ${bam_match} --tumour_bam ${bam} --normal_name ${match_normal_id} --tumour_name ${sample_id_ls.join(" ")} -chr ${chrom}
+    cgpVaf.pl -d . -o . -a ${mut_type} -g  ${fasta} -hdr  ${high_depth_regions} --vcf  ${vcf} --normal_bam ${bam_match} --tumour_bam ${bam} --normal_name ${match_normal_id} --tumour_name ${sample_id_ls.join(" ")} -chr ${chrom} --restrict_flag 0
     mv "tmpvaf_${sample_id_ls[0]}" "tmpvaf_${sample_id_ls[0]}_${chrom}"
     """
 }

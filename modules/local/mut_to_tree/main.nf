@@ -4,7 +4,7 @@ process mutToTree {
     publishDir "${params.outdir}/${outdir_basename}/${pdid}", mode: params.publish_dir_mode
 
     input:
-    tuple val(pdid), path(topology), path(nr_path), path(nv_path), path(genotype_bin_path)
+    tuple val(pdid), path(nr_path), path(nv_path), path(genotype_bin_path), path(topology)
     val outdir_basename
 
     output:

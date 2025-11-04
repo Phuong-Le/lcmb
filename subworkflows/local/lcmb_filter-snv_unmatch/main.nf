@@ -7,6 +7,8 @@ include { betaBinomFilterIndexUnmatch } from "$projectDir/modules/local/betabino
 include { betaBinomFilter } from "$projectDir/modules/local/betabinom_filter"
 include { matrixGeneratorSamples } from "$projectDir/modules/local/matrix_generator_samples"
 include { spectraPlottingSamples } from "$projectDir/modules/local/spectra_plotting_samples"
+include { clonalityTest } from "$projectDir/modules/local/clonality_test"
+include { concatClonality } from "$projectDir/modules/local/concat_clonality"
 
 
 workflow LCMB_FILTER_SNV_UNMATCH {
@@ -21,6 +23,13 @@ workflow LCMB_FILTER_SNV_UNMATCH {
     high_depth_regions
     high_depth_regions_tbi
     sigprofiler_genome
+    min_good_reads
+    max_K
+    max_iter
+    nchains
+    clonal_threshold
+    proportion_pass_clonality
+
 
     main:
 
@@ -115,7 +124,9 @@ workflow LCMB_FILTER_SNV_UNMATCH {
 
     // generate mutation matrix for the samples by SigProfilerMatrixGenerator
     matrixGeneratorSamples(
-        betaBinomFilter.out.vcf_filtered.toList(),
+        betaBinomFilter.out.vcf_filtered
+        .map { pdid, sample_id, vcf_filtered -> vcf_filtered }
+        .toList(),
         mut_type,
         sigprofiler_genome
         )
@@ -126,10 +137,34 @@ workflow LCMB_FILTER_SNV_UNMATCH {
         mut_type
         )
 
+    // clonality test
+    clonalityTest(
+        betaBinomFilter.out.vcf_filtered
+        .combine(
+            betaBinomFilterIndexUnmatch.out.phylogenetics_raw_input,
+            by: 0
+        ),
+        min_good_reads,
+        max_K,
+        max_iter,
+        nchains,
+        clonal_threshold,
+        proportion_pass_clonality,
+        mut_type
+    )
+
+    clonality_ch = clonalityTest.out.clonality
+    .groupTuple( by: 0 )
+
+    concatClonality(
+        betaBinomFilterIndexUnmatch.out.phylogenetics_raw_input
+        .combine( clonality_ch, by: 0 ),
+        mut_type
+    )
 
     emit:
-    betaBinomFilterIndexUnmatch.out.phylogenetics_input
-
+    betaBinomFilterIndexUnmatch.out.phylogenetics_raw_input
+        .combine( concatClonality.out, by: 0 )
 }
 
     //  demonstrating how to break down cgpvaf samples
