@@ -93,7 +93,7 @@
     ]
 },
 "ADF": {
-    "enable": false,
+    "enable": true,
     "require-marks": [
     "SUPPORTS-VAR"
     ],

@@ -23,7 +23,7 @@ process cgpVafConcat {
     mkdir tmpvaf_${sample_id_ls[0]}
     ln tmpvaf_${sample_id_ls[0]}_*/** tmpvaf_${sample_id_ls[0]}
 
-    cgpVaf.pl -d . -o . -a ${mut_type} -g  ${fasta} -hdr  ${high_depth_regions} --vcf  ${vcf} --normal_bam ${bam_match} --tumour_bam ${bam} --normal_name ${match_normal_id} --tumour_name ${sample_id_ls.join(" ")} -ct 1
+    cgpVaf.pl -d . -o . -a ${mut_type} -g  ${fasta} -hdr  ${high_depth_regions} --vcf  ${vcf} --normal_bam ${bam_match} --tumour_bam ${bam} --normal_name ${match_normal_id} --tumour_name ${sample_id_ls.join(" ")} -ct 1 --restrict_flag 0
 
     grep -vE '^(##)' "${match_normal_id}_${sample_id_ls[0]}_${mut_type}_vaf.tsv" | sed 's/^#//' > "${pdid}_${mut_type}_vaf.tsv"
     """
