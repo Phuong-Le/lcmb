@@ -10,21 +10,31 @@ workflow PHYLOGENETICS { // phylogenetics workflow for SNVs
     phylogenetics_input_ch
     outdir_basename
     sigprofiler_genome
+    rm_polyclonal
 
     main:
-    // remove polyclonal samples
-    rmPolyclonal(
+    if ( rm_polyclonal == true ) {
+        rmPolyclonal(
         phylogenetics_input_ch,
         outdir_basename
-    )
+        )
+        //  get phylogeny
+        // only keep trees with >2 samples
+        getPhylogeny(
+            rmPolyclonal.out.phylogenetic_input
+            .filter { it[3].readLines().first().split(' ').size() > 2 },
+            outdir_basename
+        )
+    }
+    else {
+        getPhylogeny(
+            phylogenetics_input_ch
+            .map { pdid, nr_path, nv_path, genotype_bin_path, clonality -> tuple(pdid, nr_path, nv_path, genotype_bin_path) }
+            .filter { it[3].readLines().first().split(' ').size() > 2 },
+            outdir_basename
+        )
+    }
 
-    //  get phylogeny
-    // only keep trees with >2 samples
-    getPhylogeny(
-        rmPolyclonal.out.phylogenetic_input
-        .filter { it[3].readLines().first().split(' ').size() > 2 },
-        outdir_basename
-    )
 
     // generate mutation matrix for the branches by SigProfilerMatrixGenerator
     matrixGeneratorBranches(

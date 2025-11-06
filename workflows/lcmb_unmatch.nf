@@ -60,6 +60,7 @@ workflow LCMB_UNMATCH {
     snv_then_indel
     provided_topology
     phylogenetics_outdir_basename
+    rm_polyclonal
 
     main:
 
@@ -183,7 +184,8 @@ workflow LCMB_UNMATCH {
                 LCMB_FILTER_SNV_UNMATCH.out
                 .filter { it[3].readLines().first().split(' ').size() > 2 },
                 'phylogenetics_snp_out',
-                sigprofiler_genome
+                sigprofiler_genome,
+                rm_polyclonal
             )
             if ( run_filter_indel == true ) {
                 // only run this if there are more than 2 sample per donor (genotype_bin only has one column)
@@ -204,7 +206,8 @@ workflow LCMB_UNMATCH {
                     .combine( clonality_ch, by: 0)
                     .combine( topology_ch, by: 0 ),
                     'phylogenetics_indel_out',
-                    sigprofiler_genome
+                    sigprofiler_genome,
+                    rm_polyclonal
                 )
             }
         }
@@ -236,7 +239,8 @@ workflow LCMB_UNMATCH {
                         by: 0
                     ),
                 'phylogenetics_indel_out',
-                sigprofiler_genome
+                sigprofiler_genome,
+                rm_polyclonal
             )
         }
         else {
@@ -261,7 +265,8 @@ workflow LCMB_UNMATCH {
                     .filter { it[3].readLines().first().split(' ').size() > 2 }
                     .combine( clonality_ch, by: 0 )
                     , 'phylogenetics_snp_out',
-                    sigprofiler_genome
+                    sigprofiler_genome,
+                    rm_polyclonal
                 )
                 // phylogenetics for INDEL
                 PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY(
@@ -274,7 +279,8 @@ workflow LCMB_UNMATCH {
                     .combine( clonality_ch, by: 0 )
                     .combine( PHYLOGENETICS.out, by: 0),
                     'phylogenetics_indel_out',
-                    sigprofiler_genome
+                    sigprofiler_genome,
+                    rm_polyclonal
                 )
 
             }
@@ -291,7 +297,8 @@ workflow LCMB_UNMATCH {
                     .combine( clonality_ch, by: 0 )
                     .combine( ch_samplesheet_topology, by: 0 ),
                     phylogenetics_outdir_basename,
-                    sigprofiler_genome
+                    sigprofiler_genome,
+                    rm_polyclonal
                 )
             }
             else {
@@ -306,7 +313,8 @@ workflow LCMB_UNMATCH {
                     .filter { it[3].readLines().first().split(' ').size() > 2 }
                     .combine( clonality_ch, by: 0 ),
                     phylogenetics_outdir_basename,
-                    sigprofiler_genome
+                    sigprofiler_genome,
+                    rm_polyclonal
                 )
             }
         }

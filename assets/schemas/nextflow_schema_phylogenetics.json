@@ -21,6 +21,11 @@
                 "phylogenetics_outdir_basename": {
                     "type": "string",
                     "description": "directory name to publish results when only one phylogenetics pipeline is run"
+                },
+                "rm_polyclonal": {
+                    "type": "boolean",
+                    "description": "whether to remove polyclonal samples from phylogenetics analysis, default: true",
+                    "default": true
                 }
             }
         }

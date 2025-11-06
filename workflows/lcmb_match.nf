@@ -60,6 +60,7 @@ workflow LCMB_MATCH {
     snv_then_indel
     provided_topology
     phylogenetics_outdir_basename
+    rm_polyclonal
 
     main:
 
@@ -201,7 +202,8 @@ workflow LCMB_MATCH {
                 LCMB_FILTER_SNV_MATCH.out
                 .filter { it[3].readLines().first().split(' ').size() > 2 },
                 'phylogenetics_snp_out',
-                sigprofiler_genome
+                sigprofiler_genome,
+                rm_polyclonal
             )
             if ( run_filter_indel == true ) {
                 // only run this if there are more than 2 sample per donor (genotype_bin only has one column)
@@ -222,7 +224,8 @@ workflow LCMB_MATCH {
                     .combine( clonality_ch, by: 0)
                     .combine( topology_ch, by: 0 ),
                     'phylogenetics_indel_out',
-                    sigprofiler_genome
+                    sigprofiler_genome,
+                    rm_polyclonal
                 )
             }
         }
@@ -254,7 +257,8 @@ workflow LCMB_MATCH {
                         by: 0
                     ),
                 'phylogenetics_indel_out',
-                sigprofiler_genome
+                sigprofiler_genome,
+                rm_polyclonal
             )
         }
         else {
@@ -278,7 +282,8 @@ workflow LCMB_MATCH {
                     .filter { it[3].readLines().first().split(' ').size() > 2 }
                     .combine( clonality_ch, by: 0 )
                     , 'phylogenetics_snp_out',
-                    sigprofiler_genome
+                    sigprofiler_genome,
+                    rm_polyclonal
                 )
                 // phylogenetics for INDEL
                 PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY(
@@ -291,12 +296,19 @@ workflow LCMB_MATCH {
                     .combine( clonality_ch, by: 0 )
                     .combine( PHYLOGENETICS.out, by: 0),
                     'phylogenetics_indel_out',
-                    sigprofiler_genome
+                    sigprofiler_genome,
+                    rm_polyclonal
                 )
 
             }
             else if ( provided_topology == true ) {
                 phylogenetics_outdir_basename = (phylogenetics_outdir_basename == null) ? 'phylogenetics_indel_out' : phylogenetics_outdir_basename
+                topology_ch = ch_samplesheet_topology
+                .map {
+                    meta, topology -> tuple(meta.pdid, topology)
+                }
+                .filter { it != null }
+                .unique()
 
                 PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY(
                     ch_samplesheet_phylogenetics
@@ -306,9 +318,10 @@ workflow LCMB_MATCH {
                     }
                     .filter { it[3].readLines().first().split(' ').size() > 2 }
                     .combine( clonality_ch, by: 0 )
-                    .combine( ch_samplesheet_topology, by: 0 ),
+                    .combine( topology_ch, by: 0 ),
                     phylogenetics_outdir_basename,
-                    sigprofiler_genome
+                    sigprofiler_genome,
+                    rm_polyclonal
                 )
             }
             else {
@@ -323,7 +336,8 @@ workflow LCMB_MATCH {
                     .filter { it[3].readLines().first().split(' ').size() > 2 }
                     .combine( clonality_ch, by: 0 ),
                     phylogenetics_outdir_basename,
-                    sigprofiler_genome
+                    sigprofiler_genome,
+                    rm_polyclonal
                 )
             }
         }

@@ -91,6 +91,7 @@ workflow NFCORE_LCMB {
     snv_then_indel
     provided_topology
     phylogenetics_outdir_basename
+    rm_polyclonal
 
 
     main:
@@ -139,7 +140,8 @@ workflow NFCORE_LCMB {
         proportion_pass_clonality,
         snv_then_indel,
         provided_topology,
-        phylogenetics_outdir_basename
+        phylogenetics_outdir_basename,
+        rm_polyclonal
         )
     }
     else {
@@ -183,7 +185,8 @@ workflow NFCORE_LCMB {
         proportion_pass_clonality,
         snv_then_indel,
         provided_topology,
-        phylogenetics_outdir_basename
+        phylogenetics_outdir_basename,
+        rm_polyclonal
         )
     }
 
@@ -262,7 +265,8 @@ workflow {
         params.proportion_pass_clonality,
         params.snv_then_indel,
         params.provided_topology,
-        params.phylogenetics_outdir_basename
+        params.phylogenetics_outdir_basename,
+        params.rm_polyclonal
     )
 
     //

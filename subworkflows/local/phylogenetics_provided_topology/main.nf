@@ -10,6 +10,7 @@ workflow PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY {
     phylogenetics_provided_topology_input_ch
     outdir_basename
     sigprofiler_genome
+    rm_polyclonal
 
     main:
     topology = phylogenetics_provided_topology_input_ch
@@ -22,20 +23,29 @@ workflow PHYLOGENETICS_PROVIDED_TREE_TOPOLOGY {
         tuple(pdid, nr_path, nv_path, genotype_bin_path, clonality)
     }
 
-    // remove polyclonal samples
-    rmPolyclonal(
+    if ( rm_polyclonal == true ) {
+        rmPolyclonal(
         phylogenetic_input_ch,
         outdir_basename
-    )
+        )
+        // assign mutation to provided topology
+        // only keep trees with >2 samples
+        mutToTree(
+            rmPolyclonal.out.phylogenetic_input
+            .combine( topology, by: 0 )
+            .filter { it -> it[3].readLines().first().split(' ').size() > 2 },
+            outdir_basename
+        )
+    } else {
+        mutToTree(
+            phylogenetic_input_ch
+            .map { pdid, nr_path, nv_path, genotype_bin_path, clonality -> tuple(pdid, nr_path, nv_path, genotype_bin_path) }
+            .combine( topology, by: 0 )
+            .filter { it -> it[3].readLines().first().split(' ').size() > 2 },
+            outdir_basename
+        )
+    }
 
-    // assign mutation to provided topology
-    // only keep trees with >2 samples
-    mutToTree(
-        rmPolyclonal.out.phylogenetic_input
-        .combine( topology, by: 0 )
-        .filter { it -> it[3].readLines().first().split(' ').size() > 2 },
-        outdir_basename
-    )
 
     // generate mutation matrix for the branches by SigProfilerMatrixGenerator
     matrixGeneratorBranches(

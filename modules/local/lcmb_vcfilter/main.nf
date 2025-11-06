@@ -13,14 +13,11 @@ process lcmbVcfilter {
 
     script:
     // println(" lcmbFilter ${mut_type}: ${meta}   ${vcf}")
-    vcf_filtered = "${vcf.getName().tokenize(".").init().init().join(".")}.filter.vcf"
-    vcf_filtered_gz = "${vcf_filtered}.gz"
+    vcf_filtered_gz = "${vcf.getName().tokenize(".").init().init().join(".")}.filter.vcf.gz"
+    // vcf_filtered_gz = "${vcf_filtered}.gz"
     vcf_filtered_tbi = "${vcf_filtered_gz}.tbi"
     """
-    # vcfilter filter -o . -i ${vcfilter_config} ${vcf}
-    bcftools filter -i \$(cat ${vcfilter_config}) > ${vcf_filtered}  # inclusive filtering
-    bgzip ${vcf_filtered}
-    tabix ${vcf_filtered_gz}
+    vcfilter.sh --vcf ${vcf} --vcfilter_config ${vcfilter_config} --out_vcf_filtered ${vcf_filtered_gz}
     """
 
 }
