@@ -108,10 +108,11 @@ workflow LCMB_FILTER_INDEL_MATCH {
             tuple(meta.pdid, meta.sample_id, meta.match_normal_id, vcf_filtered_gz, vcf_filtered_tbi)
         }
         .combine(
-            betaBinomFilterIndex.out.betabinom_bed,
+            betaBinomFilterIndex.out.betabinom_vcf,
             by: 0
         ),
-        mut_type
+        mut_type,
+        fai
     )
 
     // generate mutation matrix for the samples by SigProfilerMatrixGenerator

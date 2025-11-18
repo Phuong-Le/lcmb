@@ -11,7 +11,7 @@ process betaBinomFilterIndex {
     val rho_threshold
 
     output:
-    tuple val(pdid), path("*.bed"), emit: betabinom_bed
+    tuple val(pdid), path("*.vcf"), emit: betabinom_vcf
     path "germline_ids.txt", optional: true, emit: germline_ids
     path "somatic_ids.txt", optional: true, emit: somatic_ids
     path "somatic_ids_rho.txt", optional: true, emit: somatic_ids_rho

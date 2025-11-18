@@ -116,10 +116,11 @@ workflow LCMB_FILTER_SNV_UNMATCH {
             tuple(meta.pdid, meta.sample_id, meta.match_normal_id, vcf_filtered_gz, vcf_filtered_tbi)
         }
         .combine(
-            betaBinomFilterIndexUnmatch.out.betabinom_bed,
+            betaBinomFilterIndexUnmatch.out.betabinom_vcf,
             by: 0
         ),
-        mut_type
+        mut_type,
+        fai
     )
 
     // generate mutation matrix for the samples by SigProfilerMatrixGenerator

@@ -47,11 +47,17 @@ ids = vaf_data[, c('Chrom', 'Pos', 'Ref', 'Alt')]
 # If there is only one sample then no filtering is done
 sample_vaf_cols = colnames(vaf_data)[grepl("VAF",colnames(vaf_data)) & colnames(vaf_data)!=paste0(match_normal_id,"_VAF")]
 if (length(sample_vaf_cols) == 1) {
+  no_filter = ids
+  no_filter$ID = rep(".", nrow(no_filter))
+  no_filter$QUAL = rep(".", nrow(no_filter))
+  no_filter$FILTER = rep(".", nrow(no_filter))
+  no_filter$INFO = rep(".", nrow(no_filter))
 
-  no_filter = ids[, c('Chrom', 'Pos')]
-  no_filter$Preceding_pos = no_filter$Pos - 1
-  no_filter = no_filter[, c('Chrom', 'Preceding_pos', 'Pos')]
-  write.table(no_filter, paste0(outdir,"/somatic_artefacts_one_sample_no_filter.bed"), quote=F, row.names=F , col.names=F , sep="\t")
+  no_filter = no_filter[, c('Chrom', 'Pos', 'ID', 'Ref', 'Alt', 'QUAL', 'FILTER', 'INFO')]
+  outfile = paste0(outdir,"/somatic_artefacts_one_sample_no_filter.vcf")
+  writeLines(c("##fileformat=VCFv4.2",
+                "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO"), con = outfile)
+  write.table(no_filter, outfile, quote=F, row.names=F , col.names=F , sep="\t", append=TRUE)
 
 } else if (length(sample_vaf_cols) < 1) {
 
@@ -132,9 +138,15 @@ if (length(sample_vaf_cols) == 1) {
   write.table(somatic_ids_rho, paste0(outdir,"/somatic_ids_rho.txt"), row.names = F, col.names = T, quote=F)
 
   # write ids for somatics and artefact filtered mutations
-  somatic_artefacts_fltd = somatic_ids[!flt_rho, c('Chrom', 'Pos'),drop=F]
-  somatic_artefacts_fltd$Preceding_pos = somatic_artefacts_fltd$Pos - 1
-  somatic_artefacts_fltd = somatic_artefacts_fltd[, c('Chrom', 'Preceding_pos', 'Pos')]
+  somatic_artefacts_fltd = somatic_ids[!flt_rho, c('Chrom', 'Pos', 'Ref', 'Alt'), drop=F]
+  somatic_artefacts_fltd$ID = rep(".", nrow(somatic_artefacts_fltd))
+  somatic_artefacts_fltd$QUAL = rep(".", nrow(somatic_artefacts_fltd))
+  somatic_artefacts_fltd$FILTER = rep(".", nrow(somatic_artefacts_fltd))
+  somatic_artefacts_fltd$INFO = rep(".", nrow(somatic_artefacts_fltd))
 
-  write.table(somatic_artefacts_fltd, paste0(outdir,"/somatic_artefacts_filtered.bed"), quote=F, row.names=F , col.names=F , sep="\t")
+  somatic_artefacts_fltd = somatic_artefacts_fltd[, c('Chrom', 'Pos', 'ID', 'Ref', 'Alt', 'QUAL', 'FILTER', 'INFO')]
+  outfile = paste0(outdir,"/somatic_artefacts_filtered.vcf")
+  writeLines(c("##fileformat=VCFv4.2",
+                "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO"), con = outfile)
+  write.table(somatic_artefacts_fltd, outfile, quote=F, row.names=F , col.names=F , sep="\t", append=TRUE)
 }
