@@ -23,7 +23,7 @@ genotype_bin_path = opt$genotype_bin_path
 clonality_path = opt$clonality_path
 outdir = opt$outdir
 
-log_open(file_name = paste0(outdir, '/', pdid, '.clonality.log'), logdir = F)
+log_open(file_name = paste0(outdir, '/', pdid, '.rm_clonality.log'), logdir = F)
 log_print(paste0('INPUTS: ', opt))
 
 # read in data
@@ -32,6 +32,7 @@ nv = read.table(nv_path, header = T, check.names = F)
 genotype_bin = read.table(genotype_bin_path, header = T, check.names = F)
 clonality = read.table(clonality_path, header = T, check.names = F)
 
+log_print(paste0('removing polyclonal samples...', clonality$sample_id[clonality$clonality != 'clonal']))
 clonal_samples = clonality$sample_id[clonality$clonality == 'clonal']
 
 nr_clonal = nr[, colnames(nr) %in% clonal_samples, drop=F]

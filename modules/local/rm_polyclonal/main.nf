@@ -16,6 +16,7 @@ process rmPolyclonal {
     """
 
     Rscript --vanilla ${projectDir}/bin/rm_polyclonal.R \
+        --pdid ${pdid} \
         --nr_path ${nr_path} \
         --nv_path ${nv_path} \
         --genotype_bin_path ${genotype_bin_path} \
